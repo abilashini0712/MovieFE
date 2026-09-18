@@ -1,0 +1,162 @@
+﻿@page "/contact"
+@inject NavigationManager Navigation
+
+<div class="login-wrapper">
+    <MudPaper Class="contact-container">
+        <MudForm @ref="form" @bind-IsValid="isValid" Class="form">
+
+            <MudText Typo="Typo.h5" Class="head">We Are Here To Help You</MudText>
+
+            <MudTextField T="string" Label="Name" @bind-Value="Name"
+                          Class="contact-field" />
+
+            <MudTextField T="string" Label="Email" @bind-Value="Email"
+                           Class="contact-field" />
+
+            <MudTextField T="string" Label="Subject" @bind-Value="Subject"
+                          Class="contact-field" />
+
+            <MudTextField T="string" Label="Message" @bind-Value="Message"
+                          Lines="4" Class="contact-field" />
+
+            <MudButton Class="send-btn">
+                Send Message
+            </MudButton>
+
+        </MudForm>
+
+        <div class="contact-info">
+            <MudText Class="address">Kandy, Sri Lanka</MudText>
+            <MudText Class="phone">+91 98765 43210</MudText>
+            <MudText Class="email">support@cineworldmultiplex.com</MudText>
+        </div>
+    </MudPaper>
+</div>
+
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        background-color: #000000;
+        padding: 20px;
+    }
+
+    .contact-container {
+        width: 100%;
+        max-width: 460px;
+        margin: 0 auto;
+        padding: 40px 30px;
+        background-color: #121212 !important;
+        border: 1px solid #D4A017;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(212, 160, 23, 0.15);
+        text-align: center;
+    }
+
+    .head {
+        color: #D4A017;
+        font-weight: 700;
+        margin-bottom: 25px;
+        letter-spacing: 0.5px;
+    }
+
+    .form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .contact-field {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+        .contact-field .mud-input-label {
+            color: #d9d9d9 !important;
+        }
+
+        .contact-field .mud-input-slot {
+            color: #ffffff !important;
+        }
+
+        .contact-field .mud-input:before,
+        .contact-field .mud-input:after {
+            border-color: #D4A017 !important;
+        }
+
+        .contact-field .mud-input-outlined-border {
+            border-color: #555555 !important;
+        }
+
+        .contact-field:hover .mud-input-outlined-border {
+            border-color: #D4A017 !important;
+        }
+
+        .contact-field.mud-input-focused .mud-input-outlined-border {
+            border-color: #D4A017 !important;
+        }
+
+    .send-btn {
+        margin-top: 12px;
+        background-color: #D4A017 !important;
+        color: #000000 !important;
+        font-weight: 700;
+        border-radius: 8px;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+        .send-btn:hover {
+            background-color: #b8890f !important;
+            transform: translateY(-1px);
+        }
+
+    .contact-info {
+        margin-top: 25px;
+        border-top: 1px solid #333;
+        padding-top: 20px;
+    }
+
+    .address,
+    .phone,
+    .email {
+        color: #D4A017;
+        margin-bottom: 6px;
+    }
+
+   
+
+    @@media (max-width: 600px) {
+        .contact-container {
+            padding: 30px 20px;
+        }
+
+        .head {
+            font-size: 1.2rem;
+        }
+    }
+
+    @@media (max-width: 400px) {
+        .login-wrapper {
+            padding: 10px;
+        }
+
+        .contact-container {
+            border-radius: 6px;
+        }
+    }
+</style>
+
+@code {
+    private MudForm? form;
+    private bool isValid;
+
+    private string Name { get; set; } = string.Empty;
+    private string Email { get; set; } = string.Empty;
+    private string Subject { get; set; } = string.Empty;
+    private string Message { get; set; } = string.Empty;
+
+
+
+}

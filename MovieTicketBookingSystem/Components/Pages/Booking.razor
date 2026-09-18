@@ -1,0 +1,284 @@
+﻿@page "/booking"
+@inject NavigationManager Navigation
+
+
+
+<div class="login-wrapper">
+    <MudPaper Class="booking-card">
+        <MudForm @ref="form" @bind-IsValid="@isValid">
+
+            <MudText Class="head">Book Ticket</MudText>
+
+            <div class="booking-field">
+                <MudDatePicker T="DateTime" Label="Date" @bind-Value="Date" Variant="Variant.Outlined" />
+            </div>
+
+            <div class="booking-field">
+                <MudSelect T="string" Label="Time" @bind-Value="Time" Variant="Variant.Outlined">
+                    <MudSelectItem T="string" Value="@("morning")"> 10.30 am Morning </MudSelectItem>
+                    <MudSelectItem T="string" Value="@("afternoon")"> 2.00 pm Afternoon </MudSelectItem>
+                    <MudSelectItem T="string" Value="@("evening")"> 06.30 pm Evening </MudSelectItem>
+                    <MudSelectItem T="string" Value="@("night")"> 09.30 pm Night </MudSelectItem>
+                </MudSelect>
+            </div>
+
+            <div class="booking-field">
+                <MudSelect T="string" Label="Cinemas" @bind-Value="cinemas" Variant="Variant.Outlined">
+                    <MudSelectItem T="string" Value="@("C1")">C1</MudSelectItem>
+                    <MudSelectItem T="string" Value="@("C2")">C2</MudSelectItem>
+                    <MudSelectItem T="string" Value="@("C3")">C3</MudSelectItem>
+                </MudSelect>
+            </div>
+
+            <div class="booking-field">
+                <MudTextField T="int" Label="Number of Tickets" @bind-Value="Tickets" Variant="Variant.Outlined" />
+            </div>
+
+            <MudText Class="seat-heading"  T="string" @bind-Value="Seats">Select Seats</MudText>
+
+            <MudText Class="group-label">A Group</MudText>
+            <div class="seat-grid">
+                <MudCheckBox @bind-Value="a1" Label="A1" Class="seat-check" />
+                <MudCheckBox @bind-Value="a2" Label="A2" Class="seat-check" />
+                <MudCheckBox @bind-Value="a3" Label="A3" Class="seat-check" />
+                <MudCheckBox @bind-Value="a4" Label="A4" Class="seat-check" />
+                <MudCheckBox @bind-Value="a5" Label="A5" Class="seat-check" />
+                <MudCheckBox @bind-Value="a6" Label="A6" Class="seat-check" />
+                <MudCheckBox @bind-Value="a7" Label="A7" Class="seat-check" />
+                <MudCheckBox @bind-Value="a8" Label="A8" Class="seat-check" />
+                <MudCheckBox @bind-Value="a9" Label="A9" Class="seat-check" />
+                <MudCheckBox @bind-Value="a10" Label="A10" Class="seat-check" />
+            </div>
+
+            <MudText Class="group-label">B Group</MudText>
+            <div class="seat-grid">
+                <MudCheckBox @bind-Value="b1" Label="B1" Class="seat-check" />
+                <MudCheckBox @bind-Value="b2" Label="B2" Class="seat-check" />
+                <MudCheckBox @bind-Value="b3" Label="B3" Class="seat-check" />
+                <MudCheckBox @bind-Value="b4" Label="B4" Class="seat-check" />
+                <MudCheckBox @bind-Value="b5" Label="B5" Class="seat-check" />
+                <MudCheckBox @bind-Value="b6" Label="B6" Class="seat-check" />
+                <MudCheckBox @bind-Value="b7" Label="B7" Class="seat-check" />
+                <MudCheckBox @bind-Value="b8" Label="B8" Class="seat-check" />
+                <MudCheckBox @bind-Value="b9" Label="B9" Class="seat-check" />
+                <MudCheckBox @bind-Value="b10" Label="B10" Class="seat-check" />
+            </div>
+
+            <MudText Class="group-label">C Group</MudText>
+            <div class="seat-grid">
+                <MudCheckBox @bind-Value="c1" Label="C1" Class="seat-check" />
+                <MudCheckBox @bind-Value="c2" Label="C2" Class="seat-check" />
+                <MudCheckBox @bind-Value="c3" Label="C3" Class="seat-check" />
+                <MudCheckBox @bind-Value="c4" Label="C4" Class="seat-check" />
+                <MudCheckBox @bind-Value="c5" Label="C5" Class="seat-check" />
+                <MudCheckBox @bind-Value="c6" Label="C6" Class="seat-check" />
+                <MudCheckBox @bind-Value="c7" Label="C7" Class="seat-check" />
+                <MudCheckBox @bind-Value="c8" Label="C8" Class="seat-check" />
+                <MudCheckBox @bind-Value="c9" Label="C9" Class="seat-check" />
+                <MudCheckBox @bind-Value="c10" Label="C10" Class="seat-check" />
+            </div>
+
+            <MudButton OnClick="payment" Class="pay-btn" FullWidth="true">
+                Process To Payment
+            </MudButton>
+
+        </MudForm>
+    </MudPaper>
+</div>
+
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        background-color: #000000;
+        padding: 20px;
+    }
+
+    .booking-card {
+        width: 100%;
+        max-width: 700px;
+        background-color: #121212 !important;
+        border: 1px solid #D4A017;
+        border-radius: 10px;
+        padding: 40px 30px;
+        box-shadow: 0 0 20px rgba(212, 160, 23, 0.15);
+    }
+
+    .head {
+        color: #D4A017;
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 25px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .booking-field {
+        margin-bottom: 22px;
+    }
+
+        .booking-field .mud-input-label {
+            color: #d9d9d9 !important;
+        }
+
+        .booking-field .mud-input-slot,
+        .booking-field .mud-select-input {
+            color: #ffffff !important;
+        }
+
+        .booking-field .mud-input-outlined-border {
+            border-color: #555555 !important;
+        }
+
+        .booking-field:hover .mud-input-outlined-border {
+            border-color: #D4A017 !important;
+        }
+
+        .booking-field.mud-input-focused .mud-input-outlined-border {
+            border-color: #D4A017 !important;
+        }
+
+    .seat-heading {
+        color: #D4A017;
+        font-weight: 700;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .group-label {
+        color: #d9d9d9;
+        font-weight: 600;
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+
+    .seat-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px 10px;
+        margin-bottom: 10px;
+    }
+
+    .seat-check {
+        color: #d9d9d9 !important;
+    }
+
+        .seat-check .mud-checkbox-input:checked + .mud-icon-root {
+            color: #D4A017 !important;
+        }
+
+        .seat-check .mud-icon-root {
+            color: #777777 !important;
+        }
+
+        .seat-check .mud-checkbox-label {
+            color: #d9d9d9 !important;
+            font-size: 0.9rem;
+        }
+
+    .pay-btn {
+        background-color: #D4A017 !important;
+        color: #000000 !important;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-top: 30px;
+        border-radius: 6px;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+        .pay-btn:hover {
+            background-color: #b8890f !important;
+            transform: translateY(-1px);
+        }
+
+
+    @@media (max-width: 768px) {
+        .seat-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .booking-card {
+            padding: 30px 20px;
+        }
+
+        .head {
+            font-size: 1.3rem;
+        }
+
+        .seat-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 400px) {
+        .login-wrapper {
+            padding: 10px;
+        }
+
+        .booking-card {
+            border-radius: 6px;
+        }
+
+        .seat-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+@code {
+    private MudForm? form;
+    private bool isValid;
+
+    public DateTime? Date { get; set; }
+    public string Time { get; set; } = string.Empty;
+    public string cinemas { get; set; } = string.Empty;
+    public int Tickets { get; set; }
+    public string Seats { get; set; } = string.Empty;
+
+    public bool a1 { get; set; } = false;
+    public bool a2 { get; set; } = false;
+    public bool a3 { get; set; } = false;
+    public bool a4 { get; set; } = false;
+    public bool a5 { get; set; } = false;
+    public bool a6 { get; set; } = false;
+    public bool a7 { get; set; } = false;
+    public bool a8 { get; set; } = false;
+    public bool a9 { get; set; } = false;
+    public bool a10 { get; set; } = false;
+
+    public bool b1 { get; set; } = false;
+    public bool b2 { get; set; } = false;
+    public bool b3 { get; set; } = false;
+    public bool b4 { get; set; } = false;
+    public bool b5 { get; set; } = false;
+    public bool b6 { get; set; } = false;
+    public bool b7 { get; set; } = false;
+    public bool b8 { get; set; } = false;
+    public bool b9 { get; set; } = false;
+    public bool b10 { get; set; } = false;
+
+    public bool c1 { get; set; } = false;
+    public bool c2 { get; set; } = false;
+    public bool c3 { get; set; } = false;
+    public bool c4 { get; set; } = false;
+    public bool c5 { get; set; } = false;
+    public bool c6 { get; set; } = false;
+    public bool c7 { get; set; } = false;
+    public bool c8 { get; set; } = false;
+    public bool c9 { get; set; } = false;
+    public bool c10 { get; set; } = false;
+
+    private void payment()
+    {
+        Navigation.NavigateTo("/payment");
+    }
+}
+

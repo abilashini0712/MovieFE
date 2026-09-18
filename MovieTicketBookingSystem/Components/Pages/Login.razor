@@ -1,0 +1,138 @@
+﻿@page "/login"
+@inject NavigationManager Navigation
+
+<div class="login-wrapper">
+    <MudPaper Class="login-card">
+        <MudForm @ref="form">
+
+            <MudText Class="login-title">Login Form</MudText>
+
+            <MudTextField T="string" Label="UserName or Email" @bind-Value="UserName"
+                          Class="login-field" />
+
+            <MudTextField T="string" Label="Password" @bind-Value="Password"
+                          InputType="InputType.Password"  Class="login-field" />
+
+            <MudButton OnClick="goLogin" Class="login-btn" FullWidth="true">
+                Login
+            </MudButton>
+
+        </MudForm>
+    </MudPaper>
+</div>
+
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        background-color: #000000;
+        padding: 20px;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        background-color: #121212 !important;
+        border: 1px solid #D4A017;
+        border-radius: 10px;
+        padding: 40px 30px;
+        box-shadow: 0 0 20px rgba(212, 160, 23, 0.15);
+    }
+
+    .login-title {
+        color: #D4A017;
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 30px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .login-field {
+        margin-bottom: 22px;
+    }
+
+
+        .login-field .mud-input-label {
+            color: #d9d9d9 !important;
+        }
+
+        .login-field .mud-input-slot {
+            color: #ffffff !important;
+        }
+
+        
+        .login-field .mud-input:before,
+        .login-field .mud-input:after {
+            border-color: #D4A017 !important;
+        }
+
+        .login-field .mud-input-outlined-border {
+            border-color: #555555 !important;
+        }
+
+        .login-field:hover .mud-input-outlined-border {
+            border-color: #D4A017 !important;
+        }
+
+        .login-field.mud-input-focused .mud-input-outlined-border {
+            border-color: #D4A017 !important;
+        }
+
+    .login-btn {
+        background-color: #D4A017 !important;
+        color: #000000 !important;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-top: 10px;
+        border-radius: 6px;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+        .login-btn:hover {
+            background-color: #b8890f !important;
+            transform: translateY(-1px);
+        }
+
+
+
+    @@media (max-width: 600px) {
+        .login-card {
+            padding: 30px 20px;
+            max-width: 100%;
+        }
+
+        .login-title {
+            font-size: 1.3rem;
+        }
+    }
+
+    @@media (max-width: 400px) {
+        .login-wrapper {
+            padding: 10px;
+        }
+
+        .login-card {
+            border-radius: 6px;
+        }
+    }
+</style>
+
+@code {
+    private MudForm form;
+    private string UserName { get; set; } = string.Empty;
+    private string Password { get; set; } = string.Empty;
+
+    private async Task goLogin()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            Navigation.NavigateTo("/booking");
+        }
+    }
+}

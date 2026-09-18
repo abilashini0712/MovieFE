@@ -1,0 +1,30 @@
+body {
+    background-color: black;
+}
+
+.nav-container {
+    background-color: #353935;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 25px;
+}
+
+.logo {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.nav-div a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+    .nav-div a:hover {
+        text-decoration: overline;
+        color: goldenrod;
+    }

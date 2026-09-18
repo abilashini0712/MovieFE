@@ -1,0 +1,26 @@
+.nav-container {
+    background-color: #353935;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 25px;
+}
+
+.logo {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.nav-div ::deep a {
+    color: white !important;
+    margin-left: 20px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+    .nav-div ::deep a:hover {
+        color: goldenrod !important;
+        text-decoration: overline;
+    }

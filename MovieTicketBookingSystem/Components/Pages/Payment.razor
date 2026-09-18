@@ -1,0 +1,131 @@
+﻿@page "/payment"
+@inject NavigationManager Navigation
+
+<div class="login-wrapper">
+    <MudPaper Class="payment-card">
+        <MudForm @ref="form">
+            <MudText Class="payment-title">Payment Details</MudText>
+
+            <MudTextField T="string" Label="Cardholder Name" @bind-Value="name" Class="payment-field" />
+            <MudTextField T="string" Label="Card Number" @bind-Value="number" Class="payment-field" />
+            <MudTextField T="string" Label="Expiry Date" @bind-Value="date" Class="payment-field" />
+            <MudTextField T="string" Label="CVV" @bind-Value="cvv" Class="payment-field" />
+
+            <MudButton OnClick="pay" Class="pay-btn" FullWidth="true">
+                Pay
+            </MudButton>
+        </MudForm>
+    </MudPaper>
+</div>
+
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        background-color: #000000;
+        padding: 20px;
+    }
+
+    .payment-card {
+        width: 100%;
+        max-width: 420px;
+        background-color: #121212 !important;
+        border: 1px solid #D4A017;
+        border-radius: 10px;
+        padding: 40px 30px;
+        box-shadow: 0 0 20px rgba(212, 160, 23, 0.15);
+    }
+
+    .payment-title {
+        color: #D4A017;
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 30px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .payment-field {
+        margin-bottom: 22px;
+    }
+
+        .payment-field .mud-input-label {
+            color: #d9d9d9 !important;
+        }
+
+        .payment-field .mud-input-slot {
+            color: #ffffff !important;
+        }
+
+        .payment-field .mud-input:before,
+        .payment-field .mud-input:after {
+            border-color: #D4A017 !important;
+        }
+
+        .payment-field .mud-input-outlined-border {
+            border-color: #555555 !important;
+        }
+
+        .payment-field:hover .mud-input-outlined-border {
+            border-color: #D4A017 !important;
+        }
+
+        .payment-field.mud-input-focused .mud-input-outlined-border {
+            border-color: #D4A017 !important;
+        }
+
+    .pay-btn {
+        background-color: #D4A017 !important;
+        color: #000000 !important;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-top: 10px;
+        border-radius: 6px;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+        .pay-btn:hover {
+            background-color: #b8890f !important;
+            transform: translateY(-1px);
+        }
+
+
+
+    @@media (max-width: 600px) {
+        .payment-card {
+            padding: 30px 20px;
+            max-width: 100%;
+        }
+
+        .payment-title {
+            font-size: 1.3rem;
+        }
+    }
+
+    @@media (max-width: 400px) {
+        .login-wrapper {
+            padding: 10px;
+        }
+
+        .payment-card {
+            border-radius: 6px;
+        }
+    }
+</style>
+
+@code {
+    private MudForm? form;
+
+    private void pay()
+    {
+        Navigation.NavigateTo("/ticket");
+    }
+
+    public string name { get; set; } = string.Empty;
+    public string number { get; set; } = string.Empty;
+    public string date { get; set; } = string.Empty;
+    public string cvv { get; set; } = string.Empty;
+}

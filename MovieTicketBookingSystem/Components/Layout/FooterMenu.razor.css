@@ -1,0 +1,46 @@
+﻿.footer-container {
+    display: flex;
+
+   
+}
+
+
+.footer-div {
+    width: auto;
+}
+
+
+.logo {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.footer-div ::deep a {
+    color: white !important;
+    margin-left: 20px;
+    text-decoration: none;
+    font-size: 16px;
+    justify-content: space-between;
+}
+
+    .footer-div ::deep a:hover {
+        color: goldenrod !important;
+        text-decoration: overline;
+    }
+
+.footer {
+    background: linear-gradient(to top, #000 80%, #111) ;
+    padding: 70px 60px 30px;
+    color: #f5c518 !important;
+}
+
+.rights {
+    margin-top: 45px;
+    padding-top: 15px;
+    border-top: 1px solid #222;
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+}

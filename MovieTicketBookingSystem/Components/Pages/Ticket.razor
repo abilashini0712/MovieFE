@@ -1,0 +1,62 @@
+﻿@page "/ticket"
+
+<div class="ticket-wrapper">
+<MudPaper >
+
+    <MudCard Class="ticket-container">
+        <div class="ticket-div">
+        <MudText>Date: </MudText>
+        <MudText>Time: </MudText>
+        <MudText>Cinemas: </MudText>
+        <MudText>Seats:  </MudText>
+        </div>
+
+        <div class="message">
+            <MudText> Enjoy your movie   </MudText>
+                <MudText> Thank you for booking with us! </MudText>
+        </div>
+
+    </MudCard>
+
+</MudPaper>
+
+</div>
+
+<style>
+
+    .ticket-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        background-color: #000000;
+        padding: 20px;
+    }
+
+
+    .ticket-container{
+        width: 100%;
+        max-width: 420px;
+        background-color: #121212 !important;
+        border: 1px solid #D4A017;
+        border-radius: 10px;
+        padding: 40px 30px;
+        box-shadow: 0 0 20px rgba(212, 160, 23, 0.15);
+    }
+
+   .ticket-div{
+        color: goldenrod !important;
+   }
+
+   .message{
+       color:white !important ;
+       align-items: center;
+        margin-top: 25px;
+        border-top: 1px solid #333;
+        padding-top: 20px;
+   }
+
+</style>
+@code {
+
+}

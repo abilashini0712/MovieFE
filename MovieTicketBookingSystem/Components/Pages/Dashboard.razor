@@ -1,0 +1,146 @@
+﻿@page "/dashboard"
+
+
+
+<div>
+    <MudGrid>
+
+        <MudText>ADMIN </MudText>
+        <MudButton> Dashboard </MudButton>
+        <MudButton> Movie </MudButton>
+        <MudButton> Booking </MudButton>
+        <MudButton> Logout </MudButton>
+
+    </MudGrid>
+
+    <MudPaper>
+        <MudText> Dashboard </MudText>
+        <MudText> Welcome Back </MudText>
+
+        <MudCard> 
+
+            <MudText> Movies </MudText>
+
+        </MudCard>
+
+        <MudCard>
+
+            <MudText> Bookings </MudText>
+
+        </MudCard>
+
+        <MudCard>
+
+            <MudText> Users </MudText>
+
+        </MudCard>
+
+        <MudCard>
+
+            <MudText> Revenue </MudText>
+
+        </MudCard>
+
+    </MudPaper>
+    
+
+    <MudPaper>
+
+       @* <MudTable Items="@Dashboards">
+
+            <HeaderContent>
+
+                <MudTh>Booking ID </MudTh>
+         
+                <MudTh> User </MudTh>
+
+                    
+                <MudTh> Movie </MudTh>
+
+                <MudTh> Seats </MudTh>
+
+                 <MudTh> Date   </MudTh>
+
+            </HeaderContent> 
+
+            <RowTemplate>
+                <MudTd > @context.id</MudTd>
+                <MudTd> @context.user </MudTd>
+                <MudTd> @context.movie </MudTd>
+                <MudTd > @context.seats </MudTd>
+                <MudTd> @context.date </MudTd>
+            </RowTemplate>
+
+      
+
+        </MudTable> *@
+
+        <table border="1">
+            <th>Booking ID</th>
+            <th> User</th>
+            <th>Movie</th>
+            <th> Seats </th>
+            <th> Date </th>
+            
+            <tr>
+                <td>0001</td>
+                <td>Abc</td>
+                <td>3bhk</td>
+                <td>1</td>
+                <td>2026-09-16</td>
+            </tr>
+
+            <tr>
+                <td>0002</td>
+                <td>Abc</td>
+                <td>avatar</td>
+                <td>3</td>
+                <td>2026-09-15</td>
+            </tr>
+
+            <tr>
+                <td>0003</td>
+                <td>Abc</td>
+                <td>Jurassic world</td>
+                <td>10</td>
+                <td>2026-09-14</td>
+            </tr>
+
+            
+        </table>
+
+
+    </MudPaper>
+
+
+    <MudPaper>
+        <MudText> Top Performing Movies </MudText>
+        <MudList T ="string">
+            <MudListItem> Avatar 120 Bookings </MudListItem>
+            <MudListItem> How To Train Your Dragon 95 Bookings </MudListItem>
+            <MudListItem> 3BHK 80 Bookings </MudListItem>
+            <MudListItem> F1 200 Bookings </MudListItem>
+        </MudList>
+    </MudPaper>
+
+   
+
+</div>
+
+@code {
+   @* private List<Dashboard> Dashboards = new()
+    {
+        new Dashboard { id = 0001, user = "abc", movie = "3bhk", seats = "2", date="2026-09-16" }
+    };
+
+    private class Dashboard
+    {
+        public int id { get; set; }
+        public string user { get; set; } = "";
+        public string movie { get; set; } = "";
+        public string seats { get; set; } = "";
+        public string date { get; set; } = "";
+    }
+    *@
+
+}

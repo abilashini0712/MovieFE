@@ -1,0 +1,138 @@
+﻿@page "/movie"
+
+
+<MudPaper Class="section">
+    <MudText Typo="Typo.h5" Class="title"> Now Showing </MudText>
+</MudPaper>
+
+<MudGrid Class="card-container">
+    <MudItem xs="12" sm="6" md="3">
+        <MovieCard image="/images/3bhk.jpg"
+                   title="3BHK"
+                   gener="Family"
+                   duration="2hr 30min" />
+
+    </MudItem>
+
+    <MudItem xs="12" sm="6" md="3">
+        <MovieCard image="/images/avatar.jpg"
+                   title="Avatar Fier And Ash"
+                   gener="Fantacy"
+                   duration="2hr 30min" />
+
+    </MudItem>
+
+
+    <MudItem xs="12" sm="6" md="3">
+        <MovieCard image="/images/dragon.jpg"
+                   title="How To Train Your Dragon"
+                   gener="Annimal"
+                   duration="3hr" />
+
+    </MudItem>
+
+
+    <MudItem xs="12" sm="6" md="3">
+        <MovieCard image="/images/f1.jpg"
+                   title="F1"
+                   gener="Race"
+                   duration="2hr" />
+
+    </MudItem>
+</MudGrid>
+
+
+<MudPaper Class="section">
+    <MudText Typo="Typo.h5" Class="title"> Upcomming Movies </MudText>
+</MudPaper>
+
+<MudGrid Class="card-container">
+    <MudItem xs="12" sm="6" md="3">
+
+        <MovieCard uimage="/images/jurassic.jpg"
+                   utitle="Jurassic World"
+                   ugener="Science Fiction"
+                   uduration="Comming Soon" />
+    </MudItem>
+
+    <MudItem xs="12" sm="6" md="3">
+        <MovieCard uimage="/images/parasakthi.jpg"
+                   utitle="Parasakthi"
+                   ugener="Polticals"
+                   uduration="Comming Soon" />
+    </MudItem>
+
+
+    <MudItem xs="12" sm="6" md="3">
+        <MovieCard uimage="/images/bison.jpg"
+                   utitle="Bison"
+                   ugener="Sports Drama"
+                   uduration="Comming Soon" />
+    </MudItem>
+
+    <MudItem xs="12" sm="6" md="3">
+        <MovieCard uimage="/images/zoot.jpg"
+                   utitle="Zootophia"
+                   ugener="Animation"
+                   uduration="Comming Soon" />
+    </MudItem>
+
+</MudGrid>
+
+
+<style>
+
+    .section {
+        border: 1px solid goldenrod;
+        background-color: black;
+        padding: 20px 30px;
+        margin-bottom: 30px;
+        width: 100%;
+        max-width: 1600px;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+        display: flex;
+    }
+
+    .title {
+        color: white;
+        font-weight: bold;
+    }
+
+   
+    .card-container {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 24px !important;
+        max-width: 1600px;
+        margin: 0 auto 40px auto !important;
+        padding: 0 30px;
+        box-sizing: border-box;
+    }
+
+      
+        .card-container > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex-basis: auto !important;
+            box-sizing: border-box;
+        }
+
+    @@media (max-width: 900px) {
+        .card-container {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .card-container {
+            grid-template-columns: 1fr !important;
+            padding: 0 15px;
+        }
+    }
+
+</style>
+@code {
+
+}

@@ -1,0 +1,128 @@
+﻿@page "/movieCard"
+@inject NavigationManager Navigation
+
+
+@if (!string.IsNullOrEmpty(image))
+{
+    <MudCard Class="movie-card">
+        <MudCardContent Class="movie-content">
+            <MudCardMedia Image="@image" Class="image" />
+            <MudText Class="title">@title</MudText>
+            <MudText Class="gener">@gener</MudText>
+            <MudText Class="duration">@duration</MudText>
+            <MudButton @onclick="buy" Class="buy-ticket">Buy Now</MudButton>
+        </MudCardContent>
+    </MudCard>
+}
+
+
+@if (!string.IsNullOrEmpty(uimage))
+{
+    <MudCard Class="movie-card">
+        <MudCardContent Class="movie-content">
+            <MudCardMedia Image="@uimage" Class="image" />
+            <MudText Class="title">@utitle</MudText>
+            <MudText Class="gener">@ugener</MudText>
+            <MudText Class="duration">@uduration</MudText>
+            <MudButton Class="upcomming-btn">Comming Soon</MudButton>
+        </MudCardContent>
+    </MudCard>
+}
+
+<style>
+
+    .movie-card {
+        background: #090909;
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+        height: 100%;
+    }
+
+
+    .image {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        background-color: #000000;
+        background-size: contain !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+        border-radius: 8px;
+    }
+
+    .movie-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .buy-ticket, .upcomming-btn {
+        margin-top: 12px;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    .buy-ticket {
+        background: gold;
+    }
+
+        .buy-ticket:hover {
+            background: darkgoldenrod;
+        }
+
+    .upcomming-btn {
+        background: #555;
+        color: white;
+        cursor: default;
+    }
+
+    .title, .gener, .duration {
+        color: white;
+        margin: 0;
+    }
+
+    
+    @@media (max-width: 400px) {
+        .movie-card {
+            padding: 14px;
+        }
+    }
+</style>
+
+@code {
+    private void buy()
+    {
+        Navigation.NavigateTo("/register");
+    }
+
+    [Parameter]
+    public string image { get; set; } = string.Empty;
+    [Parameter]
+    public string title { get; set; } = string.Empty;
+    [Parameter]
+    public string gener { get; set; } = string.Empty;
+    [Parameter]
+    public string duration { get; set; } = string.Empty;
+
+    [Parameter]
+    public string uimage { get; set; } = string.Empty;
+
+    [Parameter]
+    public string utitle { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ugener { get; set; } = string.Empty;
+
+    [Parameter]
+    public string uduration { get; set; } = string.Empty;
+
+}
