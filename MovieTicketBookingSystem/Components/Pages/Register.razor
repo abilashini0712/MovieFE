@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@inject HttpClient Http
 @inject NavigationManager Navigation
 
 <div class="login-wrapper">
@@ -8,7 +9,8 @@
             <MudText Class="login-title">Register</MudText>
 
             <MudTextField T="string" Label="Name" @bind-Value="Name"
-                           Class="login-field" />
+                           Class="login-field"
+                           />
 
             <MudTextField T="string" Label="Email" @bind-Value="Email"
                            Class="login-field" />
@@ -19,7 +21,7 @@
             <MudButton OnClick="clickRegister" Class="login-btn" FullWidth="true">
                 Register
             </MudButton>
-
+            <MudText Class="note" > Already have account click <MudLink Href=" /login " Underline="Underline.None">Login</MudLink> </MudText>
         </MudForm>
     </MudPaper>
 </div>
@@ -120,6 +122,13 @@
             border-radius: 6px;
         }
     }
+
+    .note{
+        color:white;
+    }
+    a{
+        color: #b8890f;
+    }
 </style>
 
 @code {
@@ -134,8 +143,21 @@
 
         if (form.IsValid)
         {
-            Navigation.NavigateTo("/login");
+            var registerData = new
+            {
+                Name = Name,
+                Email = Email,
+                Password = Password
+
+            };
+            var response = await Http.PostAsJsonAsync("https://localhost:7218/api/Auth/register", registerData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/login");
+            }
         }
+       
     }
 }
 

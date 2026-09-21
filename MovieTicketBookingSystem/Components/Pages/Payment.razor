@@ -9,7 +9,7 @@
             <MudTextField T="string" Label="Cardholder Name" @bind-Value="name" Class="payment-field" />
             <MudTextField T="string" Label="Card Number" @bind-Value="number" Class="payment-field" />
             <MudTextField T="string" Label="Expiry Date" @bind-Value="date" Class="payment-field" />
-            <MudTextField T="string" Label="CVV" @bind-Value="cvv" Class="payment-field" />
+            <MudTextField T="int" Label="CVV" @bind-Value="cvv" Class="payment-field" />
 
             <MudButton OnClick="pay" Class="pay-btn" FullWidth="true">
                 Pay
@@ -127,5 +127,5 @@
     public string name { get; set; } = string.Empty;
     public string number { get; set; } = string.Empty;
     public string date { get; set; } = string.Empty;
-    public string cvv { get; set; } = string.Empty;
+    public int cvv { get; set; } 
 }
