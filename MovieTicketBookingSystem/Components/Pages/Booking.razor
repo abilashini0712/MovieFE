@@ -1,4 +1,5 @@
 ﻿@page "/booking"
+
 @inject NavigationManager Navigation
 
 
@@ -14,7 +15,7 @@
             </div>
 
             <div class="booking-field">
-                <MudSelect T="string" Label="Time" @bind-Value="Time" Variant="Variant.Outlined">
+                <MudSelect T="string" Label="Time" @bind-Value="Time" Variant="Variant.Outlined" >
                     <MudSelectItem T="string" Value="@("morning")"> 10.30 am Morning </MudSelectItem>
                     <MudSelectItem T="string" Value="@("afternoon")"> 2.00 pm Afternoon </MudSelectItem>
                     <MudSelectItem T="string" Value="@("evening")"> 06.30 pm Evening </MudSelectItem>
@@ -23,7 +24,7 @@
             </div>
 
             <div class="booking-field">
-                <MudSelect T="string" Label="Cinemas" @bind-Value="cinemas" Variant="Variant.Outlined">
+                <MudSelect T="string" Label="Cinemas" @bind-Value="cinemas" Variant="Variant.Outlined" >
                     <MudSelectItem T="string" Value="@("C1")">C1</MudSelectItem>
                     <MudSelectItem T="string" Value="@("C2")">C2</MudSelectItem>
                     <MudSelectItem T="string" Value="@("C3")">C3</MudSelectItem>
@@ -78,7 +79,7 @@
                 <MudCheckBox @bind-Value="c10" Label="C10" Class="seat-check" />
             </div>
 
-            <MudButton OnClick="payment" Class="pay-btn" FullWidth="true">
+            <MudButton  onClick="Payment" Class="pay-btn" FullWidth="true">
                 Process To Payment
             </MudButton>
 
@@ -276,9 +277,10 @@
     public bool c9 { get; set; } = false;
     public bool c10 { get; set; } = false;
 
-    private void payment()
+    private void Payment()
     {
         Navigation.NavigateTo("/payment");
     }
 }
 
+    
