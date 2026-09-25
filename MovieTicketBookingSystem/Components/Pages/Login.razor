@@ -129,7 +129,19 @@
     private string UserName  = "";
     private string Password  = "";
 
-    private async Task goLogin()
+  /* [Parameter]
+    public int RegisterId { get; set; } */
+
+
+    public class LoginResponse
+    {
+        public string message { get; set; }
+        public int? userId { get; set; }
+        public string name { get; set; }
+        public string email { get; set; }
+    }
+
+   /*private async Task goLogin()
     {
         await form.Validate();
 
@@ -139,15 +151,53 @@
             {
                 UserName = UserName,
 
-                Password = Password
+                Password = Password,
+
+                
 
             };
             var response = await Http.PostAsJsonAsync("https://localhost:7218/api/Auth/login", loginData);
 
             if (response.IsSuccessStatusCode)
             {
-                Navigation.NavigateTo("/booking");
+                Navigation.NavigateTo($"/booking/{RegisterId}");
+            }
+        }
+    }*/
+    private async Task goLogin()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            var loginData = new
+            {
+                UserName = UserName,
+                Password = Password
+            };
+
+            var response = await Http.PostAsJsonAsync(
+                "https://localhost:7218/api/Auth/login",
+                loginData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content
+                    .ReadFromJsonAsync<LoginResponse>();
+
+                if (result != null)
+                {
+                    Console.WriteLine($"Logged-in RegisterId = {result.userId}");
+
+                    Navigation.NavigateTo(
+                        $"/booking/{result.userId}");
+                }
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(error);
             }
         }
     }
-   }
+}

@@ -1,4 +1,5 @@
 ﻿@page "/payment"
+@inject HttpClient Http 
 @inject NavigationManager Navigation
 
 <div class="login-wrapper">
@@ -6,10 +7,10 @@
         <MudForm @ref="form">
             <MudText Class="payment-title">Payment Details</MudText>
 
-            <MudTextField T="string" Label="Cardholder Name" @bind-Value="name" Class="payment-field" />
-            <MudTextField T="string" Label="Card Number" @bind-Value="number" Class="payment-field" />
-            <MudTextField T="string" Label="Expiry Date" @bind-Value="date" Class="payment-field" />
-            <MudTextField T="int" Label="CVV" @bind-Value="cvv" Class="payment-field" />
+            <MudTextField T="string" Label="Cardholder Name" @bind-Value="name" Class="payment-field" Required="true" />
+            <MudTextField T="string" Label="Card Number" @bind-Value="number" Class="payment-field"  Required="true"/>
+            <MudTextField T="string" Label="Expiry Date" @bind-Value="date" Class="payment-field" Required="true"/>
+            <MudTextField T="int" Label="CVV" @bind-Value="cvv" Class="payment-field" Required="true" />
 
             <MudButton OnClick="pay" Class="pay-btn" FullWidth="true">
                 Pay
@@ -119,13 +120,61 @@
 @code {
     private MudForm? form;
 
-    private void pay()
+    public class PaymentResponse
     {
-        Navigation.NavigateTo("/ticket");
+        public int? id { get; set; }
+    public string name { get; set; }
+    public int? number { get; set; }
+    public string date { get; set; }
+    public int? cvv { get; set; }
+
+    } 
+
+
+     private async Task pay()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            var loginData = new
+            {
+               name = name,
+               number = number,
+               date = date,
+               cvv = cvv
+            };
+
+            var response = await Http.PostAsJsonAsync(
+                "https://localhost:7218/api/Payment",
+                loginData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content
+                    .ReadFromJsonAsync<PaymentResponse>();
+
+                if (result != null)
+                {
+                    Console.WriteLine($"Payment RegisterId = {result.id}");
+
+                    Navigation.NavigateTo(
+                        $"/ticket/{result.id}");
+                }
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(error);
+            }
+        }
     }
+
+   
 
     public string name { get; set; } = string.Empty;
     public string number { get; set; } = string.Empty;
     public string date { get; set; } = string.Empty;
     public int cvv { get; set; } 
+
 }

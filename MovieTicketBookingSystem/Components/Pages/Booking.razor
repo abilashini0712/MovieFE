@@ -1,5 +1,5 @@
-﻿@page "/booking"
-
+﻿@page "/booking/{RegisterId:int}"
+@inject HttpClient Http
 @inject NavigationManager Navigation
 
 
@@ -11,11 +11,11 @@
             <MudText Class="head">Book Ticket</MudText>
 
             <div class="booking-field">
-                <MudDatePicker T="DateTime" Label="Date" @bind-Value="Date" Variant="Variant.Outlined" />
+                <MudDatePicker T="DateTime" Label="Date" @bind-Value="Date" Variant="Variant.Outlined" Required="true" />
             </div>
 
             <div class="booking-field">
-                <MudSelect T="string" Label="Time" @bind-Value="Time" Variant="Variant.Outlined" >
+                <MudSelect T="string" Label="Time" @bind-Value="Time" Variant="Variant.Outlined"  Required="true">
                     <MudSelectItem T="string" Value="@("morning")"> 10.30 am Morning </MudSelectItem>
                     <MudSelectItem T="string" Value="@("afternoon")"> 2.00 pm Afternoon </MudSelectItem>
                     <MudSelectItem T="string" Value="@("evening")"> 06.30 pm Evening </MudSelectItem>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="booking-field">
-                <MudSelect T="string" Label="Cinemas" @bind-Value="cinemas" Variant="Variant.Outlined" >
+                <MudSelect T="string" Label="Cinemas" @bind-Value="cinemas" Variant="Variant.Outlined" Required="true" >
                     <MudSelectItem T="string" Value="@("C1")">C1</MudSelectItem>
                     <MudSelectItem T="string" Value="@("C2")">C2</MudSelectItem>
                     <MudSelectItem T="string" Value="@("C3")">C3</MudSelectItem>
@@ -32,7 +32,7 @@
             </div>
 
             <div class="booking-field">
-                <MudTextField T="int" Label="Number of Tickets" @bind-Value="Tickets" Variant="Variant.Outlined" />
+                <MudTextField T="int" Label="Number of Tickets" @bind-Value="Tickets" Variant="Variant.Outlined" Required="true"/>
             </div>
 
             <MudText Class="seat-heading"  T="string" @bind-Value="Seats">Select Seats</MudText>
@@ -238,7 +238,7 @@
     private MudForm? form;
     private bool isValid;
 
-    public DateTime? Date { get; set; }
+    public DateTime Date { get; set; }
     public string Time { get; set; } = string.Empty;
     public string cinemas { get; set; } = string.Empty;
     public int Tickets { get; set; }
@@ -277,12 +277,83 @@
     public bool c9 { get; set; } = false;
     public bool c10 { get; set; } = false;
 
-    public int RegisterId { get; set; }
+    [Parameter]
+    public int RegisterId { get; set; } 
 
-    private void Payment()
+    private void SelectSeats()
     {
-        Navigation.NavigateTo("/payment");
-    } 
+        var select = new List<string>();
+
+        if (a1) select.Add("A1");
+        if (a2) select.Add("A2");
+        if (a3) select.Add("A3");
+        if (a4) select.Add("A4");
+        if (a5) select.Add("A5");
+        if (a6) select.Add("A6");
+        if (a7) select.Add("A7");
+        if (a8) select.Add("A8");
+        if (a9) select.Add("A9");
+        if (a10) select.Add("A10");
+
+        if (b1) select.Add("B1");
+        if (b2) select.Add("B2");
+        if (b3) select.Add("B3");
+        if (b4) select.Add("B4");
+        if (b5) select.Add("B5");
+        if (b6) select.Add("B6");
+        if (b7) select.Add("B7");
+        if (b8) select.Add("B8");
+        if (b9) select.Add("B9");
+        if (b10) select.Add("B10");
+
+        if (c1) select.Add("C1");
+        if (c2) select.Add("C2");
+        if (c3) select.Add("C3");
+        if (c4) select.Add("C4");
+        if (c5) select.Add("C5");
+        if (c6) select.Add("C6");
+        if (c7) select.Add("C7");
+        if (c8) select.Add("C8");
+        if (c9) select.Add("C9");
+        if (c10) select.Add("C10");
+
+        Seats = string.Join(",", select);
+
+    }
+
+    private async Task Payment()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            SelectSeats();
+
+            var bookingData = new
+            {
+                Seats = Seats,
+                Time = Time,
+                Cinemas = cinemas,
+                Date = Date,
+                Tickets = Tickets,
+                RegisterId = RegisterId
+
+            };
+            var response = await Http.PostAsJsonAsync("https://localhost:7218/api/Booking", bookingData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/payment");
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Booking failed: {response.StatusCode}");
+                Console.WriteLine(error);
+            }
+        }
+
+    }
 }
 
     
