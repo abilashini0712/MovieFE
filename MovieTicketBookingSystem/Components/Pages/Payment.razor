@@ -123,15 +123,16 @@
     public class PaymentResponse
     {
         public int? id { get; set; }
-    public string name { get; set; }
-    public int? number { get; set; }
-    public string date { get; set; }
-    public int? cvv { get; set; }
+        public string name { get; set; }
+        public int? number { get; set; }
+        public string date { get; set; }
+        public int? cvv { get; set; }
+
 
     } 
 
 
-     private async Task pay()
+  /*  private async Task pay()
     {
         await form.Validate();
 
@@ -139,10 +140,12 @@
         {
             var loginData = new
             {
-               name = name,
-               number = number,
-               date = date,
-               cvv = cvv
+                name = name,
+                number = number,
+                date = date,
+                cvv = cvv,
+
+
             };
 
             var response = await Http.PostAsJsonAsync(
@@ -158,8 +161,7 @@
                 {
                     Console.WriteLine($"Payment RegisterId = {result.id}");
 
-                    Navigation.NavigateTo(
-                        $"/ticket/{result.id}");
+                    Navigation.NavigateTo($"/ticket/{result.id}");
                 }
             }
             else
@@ -168,13 +170,38 @@
                 Console.WriteLine(error);
             }
         }
-    }
+    }*/
 
-   
+    private async Task pay()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            var paymentData = new
+            {
+                name = name,
+                number = number,
+                date = date,
+                cvv = cvv,
+                BookingId = BookingId
+            };
+
+            var response = await Http.PostAsJsonAsync(
+                "https://localhost:7218/api/Payment",
+                paymentData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo($"/ticket/{BookingId}");
+            }
+        }
+    }
 
     public string name { get; set; } = string.Empty;
     public string number { get; set; } = string.Empty;
     public string date { get; set; } = string.Empty;
     public int cvv { get; set; } 
+    public int BookingId { get; set; }
 
 }

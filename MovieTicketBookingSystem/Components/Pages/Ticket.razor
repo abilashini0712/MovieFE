@@ -1,15 +1,15 @@
-﻿@page "/ticket/{RegisterId:int}"
+﻿@page "/ticket{BookingId:int}"
 
 <div class="ticket-wrapper">
 <MudPaper >
 
     <MudCard Class="ticket-container">
         <div class="ticket-div">
-         <MudText>Title:</MudText>   
-        <MudText>Date: </MudText>
-        <MudText>Time: </MudText>
-        <MudText>Cinemas: </MudText>
-        <MudText>Seats:  </MudText>
+     
+        <MudText>Date:@Date </MudText>
+        <MudText>Time:@Time </MudText>
+        <MudText>Cinemas:@Cinemas </MudText>
+        <MudText>Seats:@Seats  </MudText>
         </div>
 
         <div class="message">
@@ -21,7 +21,7 @@
 
 </MudPaper>
 
-</div>g
+</div>
 
 <style>
 
@@ -59,5 +59,13 @@
 
 </style>
 @code {
+
+    public int Id { get; set; }
+    public DateTime? Date { get; set; }
+    public string Time { get; set; }
+    public string Cinemas { get; set; }
+    public string Seats { get; set; }
+    public int BookingId { get; set; }
+
 
 }
