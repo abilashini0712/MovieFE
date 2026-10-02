@@ -77,8 +77,18 @@
                    uduration="Comming Soon" />
     </MudItem>
 
-</MudGrid>
+</MudGrid> 
 
+
+ @*<MudCard Class="movie-card">
+        <MudCardContent Class="movie-content">
+            <MudCardMedia Image="@Image" Class="image" />
+            <MudText Class="title">@title</MudText>
+            <MudText Class="gener">@gener</MudText>
+            <MudText Class="duration">@duration</MudText>
+            <MudButton @onclick="buy" Class="buy-ticket">Buy Now</MudButton>
+        </MudCardContent>
+    </MudCard>*@
 
 <style>
 
@@ -134,5 +144,15 @@
 
 </style>
 @code {
+
+       /* private List<Movie> movies = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        movies = await Http.GetFromJsonAsync<List<Movie>>(
+            "http://localhost:5264/api/Cards"
+        ) ?? new List<Movie>();
+    }
+       */
 
 }

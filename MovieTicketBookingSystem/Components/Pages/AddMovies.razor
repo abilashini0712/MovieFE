@@ -114,5 +114,13 @@
             Console.WriteLine($"Movie Added failed: {response.StatusCode}");
             Console.WriteLine(error);
         }
+
+       /* var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:5264/api/Cards/{id}");
+        request.Content = new StreamContent(File.OpenRead("/movie"));
+        var Response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        Console.WriteLine(await Response.Content.ReadAsStringAsync());*/
+
     }
 }
