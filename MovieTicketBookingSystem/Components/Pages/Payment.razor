@@ -188,7 +188,7 @@
             };
 
             var response = await Http.PostAsJsonAsync(
-                "https://localhost:7218/api/Payment",
+                "http://localhost:5264/api/Payment",
                 paymentData);
 
             if (response.IsSuccessStatusCode)

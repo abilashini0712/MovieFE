@@ -1,4 +1,5 @@
 ﻿@page "/dashboard"
+@inject NavigationManager Navigation
 
 
 
@@ -7,7 +8,7 @@
 
         <MudText>ADMIN </MudText>
         <MudButton> Dashboard </MudButton>
-        <MudButton> Movie </MudButton>
+        <MudButton onclick = "addMovie"> Movie </MudButton>
         <MudButton> Booking </MudButton>
         <MudButton> Logout </MudButton>
 
@@ -143,4 +144,8 @@
     }
     *@
 
+
+    private void addMovie(){
+        Navigation.NavigateTo("/addMovies");
+    }
 }

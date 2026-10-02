@@ -1,0 +1,118 @@
+﻿@page "/addMovies"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<MudPaper Class="pa-4">
+
+    <MudText Typo="Typo.h5">Add New Movie</MudText>
+
+    <MudForm @ref="form" @bind-IsValid="@isValid">
+
+        <MudTextField T="string"
+                      Label="Movie Name"
+                      @bind-Value="Title"
+                      Required="true" />
+
+        <MudTextField T="string"
+                      Label="Genre"
+                      @bind-Value="Gener"
+                      Required="true" />
+
+        <MudTextField T="string"
+                      Label="Duration"
+                      @bind-Value="Duration"
+                      Required="true" />
+
+        <MudFileUpload T="IBrowserFile"
+                       FilesChanged="UploadFiles"
+                       Accept="image/*">
+
+            <ActivatorContent>
+                <MudButton Variant="Variant.Filled">
+                    Upload Image
+                </MudButton>
+            </ActivatorContent>
+
+        </MudFileUpload>
+
+        @if (PosterFile != null)
+        {
+            <MudText>
+                Selected Image: @PosterFile.Name
+            </MudText>
+        }
+
+        <MudButton Variant="Variant.Filled"
+                   
+                   OnClick="AddMovie">
+            Add Movie
+        </MudButton>
+
+    </MudForm>
+
+</MudPaper>
+
+@code {
+
+    private MudForm? form;
+    private bool isValid;
+
+    private string Title { get; set; } = string.Empty;
+    private string Gener { get; set; } = string.Empty;
+    private string Duration { get; set; } = string.Empty;
+
+    private IBrowserFile? PosterFile;
+    private byte[]? image;
+
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        PosterFile = file;
+
+        using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+
+        using var memoryStream = new MemoryStream();
+
+        await stream.CopyToAsync(memoryStream);
+
+        image = memoryStream.ToArray();
+    }
+
+    private async Task AddMovie()
+    {
+        await form!.Validate();
+
+        if (!form.IsValid)
+            return;
+
+        if (image == null || image.Length == 0)
+        {
+            Console.WriteLine("Please select an image.");
+            return;
+        }
+
+        var MovieData = new
+        {
+            title = Title,
+            duration = Duration,
+            gener = Gener,
+            image = image
+        };
+
+        var response = await Http.PostAsJsonAsync(
+            "http://localhost:5264/api/Cards",
+            MovieData
+        );
+
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/movie");
+        }
+        else
+        {
+            var error = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine($"Movie Added failed: {response.StatusCode}");
+            Console.WriteLine(error);
+        }
+    }
+}
