@@ -150,7 +150,7 @@
                 Password = Password
 
             };
-            var response = await Http.PostAsJsonAsync("http://localhost:5264/api/Auth/register", registerData);
+            var response = await Http.PostAsJsonAsync("https://localhost:7218/api/Auth/register", registerData);
 
             if (response.IsSuccessStatusCode)
             {

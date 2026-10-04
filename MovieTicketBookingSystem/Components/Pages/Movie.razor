@@ -1,44 +1,36 @@
 ﻿@page "/movie"
-
+@using MovieTicketBookingSystem.Models
+@inject HttpClient Http
 
 <MudPaper Class="section">
     <MudText Typo="Typo.h5" Class="title"> Now Showing </MudText>
 </MudPaper>
 
 <MudGrid Class="card-container">
-    <MudItem xs="12" sm="6" md="3">
-        <MovieCard image="/images/3bhk.jpg"
-                   title="3BHK"
-                   gener="Family"
-                   duration="2hr 30min" />
 
-    </MudItem>
+   
+    @if (isLoading)
+    {
+        <MudText Class="title">Loading movies...</MudText>
+    }
+    else if (movies.Count == 0)
+    {
+        <MudText Class="title">No movies found.</MudText>
+    }
+    else
+    {
+        
+        @foreach (var movie in movies)
+        {
+            <MudItem xs="12" sm="6" md="3">
+                <MovieCard image="@GetImageSrc(movie)"
+                           title="@movie.title"
+                           gener="@movie.gener"
+                           duration="@movie.duration" />
+            </MudItem>
+        }
+    }
 
-    <MudItem xs="12" sm="6" md="3">
-        <MovieCard image="/images/avatar.jpg"
-                   title="Avatar Fier And Ash"
-                   gener="Fantacy"
-                   duration="2hr 30min" />
-
-    </MudItem>
-
-
-    <MudItem xs="12" sm="6" md="3">
-        <MovieCard image="/images/dragon.jpg"
-                   title="How To Train Your Dragon"
-                   gener="Annimal"
-                   duration="3hr" />
-
-    </MudItem>
-
-
-    <MudItem xs="12" sm="6" md="3">
-        <MovieCard image="/images/f1.jpg"
-                   title="F1"
-                   gener="Race"
-                   duration="2hr" />
-
-    </MudItem>
 </MudGrid>
 
 
@@ -48,7 +40,6 @@
 
 <MudGrid Class="card-container">
     <MudItem xs="12" sm="6" md="3">
-
         <MovieCard uimage="/images/jurassic.jpg"
                    utitle="Jurassic World"
                    ugener="Science Fiction"
@@ -61,7 +52,6 @@
                    ugener="Polticals"
                    uduration="Comming Soon" />
     </MudItem>
-
 
     <MudItem xs="12" sm="6" md="3">
         <MovieCard uimage="/images/bison.jpg"
@@ -76,19 +66,8 @@
                    ugener="Animation"
                    uduration="Comming Soon" />
     </MudItem>
+</MudGrid>
 
-</MudGrid> 
-
-
- @*<MudCard Class="movie-card">
-        <MudCardContent Class="movie-content">
-            <MudCardMedia Image="@Image" Class="image" />
-            <MudText Class="title">@title</MudText>
-            <MudText Class="gener">@gener</MudText>
-            <MudText Class="duration">@duration</MudText>
-            <MudButton @onclick="buy" Class="buy-ticket">Buy Now</MudButton>
-        </MudCardContent>
-    </MudCard>*@
 
 <style>
 
@@ -110,7 +89,6 @@
         font-weight: bold;
     }
 
-   
     .card-container {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
@@ -121,7 +99,6 @@
         box-sizing: border-box;
     }
 
-      
         .card-container > div {
             width: 100% !important;
             max-width: 100% !important;
@@ -143,16 +120,40 @@
     }
 
 </style>
+
 @code {
 
-       /* private List<Movie> movies = new();
+  
+    private List<MovieModel> movies = new();
+
+    
+    private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        movies = await Http.GetFromJsonAsync<List<Movie>>(
-            "http://localhost:5264/api/Cards"
-        ) ?? new List<Movie>();
+        try
+        {
+           
+            movies = await Http.GetFromJsonAsync<List<MovieModel>>(
+                "https://localhost:7218/api/Cards"
+            ) ?? new List<MovieModel>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load movies: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
-       */
 
+    
+    private string GetImageSrc(MovieModel movie)
+    {
+        if (movie.Image == null || movie.Image.Length == 0)
+            return string.Empty; 
+
+        return $"data:image/jpeg;base64,{Convert.ToBase64String(movie.Image)}";
+    }
 }

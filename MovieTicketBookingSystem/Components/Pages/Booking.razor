@@ -339,7 +339,7 @@
                 RegisterId = RegisterId
 
             };
-            var response = await Http.PostAsJsonAsync("http://localhost:5264/api/Booking", bookingData);
+            var response = await Http.PostAsJsonAsync("https://localhost:7218/api/Booking", bookingData);
 
             if (response.IsSuccessStatusCode)
             {

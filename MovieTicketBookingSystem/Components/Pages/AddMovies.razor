@@ -2,9 +2,9 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
-<MudPaper Class="pa-4">
+<MudPaper Class="pa-4 add-movie-card">
 
-    <MudText Typo="Typo.h5">Add New Movie</MudText>
+    <MudText Typo="Typo.h5" Class="add-movie-title">Add New Movie</MudText>
 
     <MudForm @ref="form" @bind-IsValid="@isValid">
 
@@ -28,7 +28,7 @@
                        Accept="image/*">
 
             <ActivatorContent>
-                <MudButton Variant="Variant.Filled">
+                <MudButton Variant="Variant.Filled" Class="gold-outline-btn">
                     Upload Image
                 </MudButton>
             </ActivatorContent>
@@ -37,13 +37,13 @@
 
         @if (PosterFile != null)
         {
-            <MudText>
+            <MudText Class="selected-image">
                 Selected Image: @PosterFile.Name
             </MudText>
         }
 
         <MudButton Variant="Variant.Filled"
-                   
+                   Class="gold-btn"
                    OnClick="AddMovie">
             Add Movie
         </MudButton>
@@ -51,6 +51,95 @@
     </MudForm>
 
 </MudPaper>
+
+<style>
+
+    
+    .add-movie-card {
+        background-color: #000000 !important;
+        border: 1px solid goldenrod;
+        border-radius: 12px;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px !important;
+        box-sizing: border-box;
+        box-shadow: 0 0 20px rgba(218, 165, 32, 0.25);
+    }
+
+    /* ---------- Page title ---------- */
+    .add-movie-title {
+        color: gold !important;
+        font-weight: bold !important;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .add-movie-card .mud-input,
+    .add-movie-card .mud-input-slot {
+        color: white !important;
+    }
+
+    .add-movie-card .mud-input-label {
+        color: goldenrod !important;
+    }
+
+    .add-movie-card .mud-input-control:focus-within .mud-input-label {
+        color: gold !important;
+    }
+
+    .add-movie-card .mud-input.mud-input-underline:before {
+        border-bottom: 1px solid goldenrod !important;
+    }
+
+    .add-movie-card .mud-input.mud-input-underline:after {
+        border-bottom: 2px solid gold !important;
+    }
+
+    .add-movie-card input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px #000000 inset !important;
+        -webkit-text-fill-color: white !important;
+    }
+
+    .gold-outline-btn {
+        background-color: #000000 !important;
+        color: gold !important;
+        border: 1px solid gold !important;
+        border-radius: 8px !important;
+        font-weight: bold !important;
+        margin-top: 20px;
+    }
+
+        .gold-outline-btn:hover {
+            background-color: rgba(255, 215, 0, 0.15) !important;
+        }
+
+    .selected-image {
+        color: white !important;
+        margin-top: 10px;
+    }
+
+    .gold-btn {
+        background-color: gold !important;
+        color: #000000 !important;
+        font-weight: bold !important;
+        border-radius: 8px !important;
+        width: 100%;
+        margin-top: 25px;
+        padding: 10px !important;
+    }
+
+        .gold-btn:hover {
+            background-color: darkgoldenrod !important;
+        }
+
+    @@media (max-width: 600px) {
+        .add-movie-card {
+            margin: 20px 15px;
+            padding: 20px !important;
+        }
+    }
+
+</style>
 
 @code {
 
@@ -99,7 +188,7 @@
         };
 
         var response = await Http.PostAsJsonAsync(
-            "http://localhost:5264/api/Cards",
+            "https://localhost:7218/api/Cards",
             MovieData
         );
 
@@ -115,12 +204,7 @@
             Console.WriteLine(error);
         }
 
-       /* var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:5264/api/Cards/{id}");
-        request.Content = new StreamContent(File.OpenRead("/movie"));
-        var Response = await client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-        Console.WriteLine(await Response.Content.ReadAsStringAsync());*/
+       
 
     }
 }
