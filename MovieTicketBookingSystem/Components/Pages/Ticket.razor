@@ -1,15 +1,20 @@
-﻿@page "/ticket{BookingId:int}"
+﻿@page "/ticket/{BookingId:int}" 
+@using MovieTicketBookingSystem.Models
+@inject HttpClient Http
 
 <div class="ticket-wrapper">
 <MudPaper >
 
     <MudCard Class="ticket-container">
         <div class="ticket-div">
-     
-        <MudText>Date:@Date </MudText>
-        <MudText>Time:@Time </MudText>
-        <MudText>Cinemas:@Cinemas </MudText>
-        <MudText>Seats:@Seats  </MudText>
+
+        @foreach (var ticket in tickets)
+    {
+        <MudText>Date:@ticket.Date </MudText>
+        <MudText>Time:@ticket.Time </MudText>
+        <MudText>Cinemas:@ticket.Cinemas </MudText>
+        <MudText>Seats:@ticket.Seats  </MudText>
+    }
         </div>
 
         <div class="message">
@@ -60,12 +65,37 @@
 </style>
 @code {
 
-    public int Id { get; set; }
-    public DateTime? Date { get; set; }
-    public string Time { get; set; }
-    public string Cinemas { get; set; }
-    public string Seats { get; set; }
+  
+
+    [Parameter]
     public int BookingId { get; set; }
 
+  
+
+       private List<TicketModel> tickets = new();
+
+    
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+           
+            tickets = await Http.GetFromJsonAsync<List<TicketModel>>(
+                            $"https://localhost:7218/api/Ticket/{BookingId}"
+            ) ?? new List<TicketModel>();
+
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load tickets: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
 
 }
