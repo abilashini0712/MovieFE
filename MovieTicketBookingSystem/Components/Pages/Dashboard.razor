@@ -8,7 +8,7 @@
 
         <MudText>ADMIN </MudText>
         <MudButton> Dashboard </MudButton>
-        <MudButton onclick = "addMovie"> Movie </MudButton>
+        <MudButton onclick="addMovie"> Movie </MudButton>
         <MudButton> Booking </MudButton>
         <MudButton> Logout </MudButton>
 
@@ -18,7 +18,7 @@
         <MudText> Dashboard </MudText>
         <MudText> Welcome Back </MudText>
 
-        <MudCard> 
+        <MudCard>
 
             <MudText> Movies </MudText>
 
@@ -43,11 +43,11 @@
         </MudCard>
 
     </MudPaper>
-    
+
 
     <MudPaper>
 
-       @* <MudTable Items="@Dashboards">
+        @* <MudTable Items="@Dashboards">
 
             <HeaderContent>
 
@@ -82,7 +82,7 @@
             <th>Movie</th>
             <th> Seats </th>
             <th> Date </th>
-            
+
             <tr>
                 <td>0001</td>
                 <td>Abc</td>
@@ -107,7 +107,7 @@
                 <td>2026-09-14</td>
             </tr>
 
-            
+
         </table>
 
 
@@ -116,7 +116,7 @@
 
     <MudPaper>
         <MudText> Top Performing Movies </MudText>
-        <MudList T ="string">
+        <MudList T="string">
             <MudListItem> Avatar 120 Bookings </MudListItem>
             <MudListItem> How To Train Your Dragon 95 Bookings </MudListItem>
             <MudListItem> 3BHK 80 Bookings </MudListItem>
@@ -124,12 +124,12 @@
         </MudList>
     </MudPaper>
 
-   
+
 
 </div>
 
 @code {
-   @* private List<Dashboard> Dashboards = new()
+    @* private List<Dashboard> Dashboards = new()
     {
         new Dashboard { id = 0001, user = "abc", movie = "3bhk", seats = "2", date="2026-09-16" }
     };
@@ -145,7 +145,272 @@
     *@
 
 
-    private void addMovie(){
+    private void addMovie()
+    {
         Navigation.NavigateTo("/addMovies");
     }
 }
+
+
+<style>
+
+   
+
+    body {
+        margin: 0;
+        background-color: #000000;
+    }
+
+
+    
+
+    .mud-grid {
+        position: absolute;
+        left: 0;
+        top: 100px;
+        width: 220px;
+        min-height: calc(100vh - 100px);
+        background-color: #111111;
+        border-right: 1px solid #D4A017;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 25px 15px;
+        box-sizing: border-box;
+        z-index: 900;
+    }
+
+
+        /* =========================
+           ADMIN TITLE
+           ========================= */
+
+        .mud-grid .mud-typography {
+            color: #D4A017 !important;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333333;
+        }
+
+
+        
+
+        .mud-grid .mud-button {
+            width: 100%;
+            height: 48px;
+            min-height: 48px;
+            justify-content: flex-start;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: #dddddd !important;
+            background-color: transparent !important;
+            border-radius: 6px;
+            text-transform: none;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+
+
+            .mud-grid .mud-button:hover {
+                background-color: #242424 !important;
+                color: #D4A017 !important;
+                border-left: 3px solid #D4A017;
+            }
+
+
+       
+
+        .mud-grid ~ .mud-paper {
+            margin-left: 240px;
+            margin-right: 25px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 25px;
+            background-color: #111111 !important;
+            color: white !important;
+            border: 1px solid #2d2d2d;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+
+            
+
+            .mud-grid ~ .mud-paper .mud-typography {
+                color: #D4A017 !important;
+                font-size: 18px;
+                font-weight: 500;
+            }
+
+
+
+            .mud-grid ~ .mud-paper .mud-card {
+                display: inline-flex;
+                vertical-align: top;
+                width: calc(25% - 15px);
+                min-height: 110px;
+                margin-top: 20px;
+                margin-right: 15px;
+                padding: 20px;
+                box-sizing: border-box;
+                background-color: #1a1a1a !important;
+                border: 1px solid #333333;
+                border-radius: 8px;
+                color: white !important;
+                align-items: center;
+                justify-content: center;
+                transition: 0.2s ease;
+            }
+
+
+               
+
+                .mud-grid ~ .mud-paper .mud-card:last-child {
+                    margin-right: 0;
+                }
+
+
+               
+
+                .mud-grid ~ .mud-paper .mud-card:hover {
+                    border-color: #D4A017;
+                    transform: translateY(-3px);
+                    box-shadow: 0 5px 20px rgba(212, 160, 23, 0.12);
+                }
+
+
+               
+
+                .mud-grid ~ .mud-paper .mud-card .mud-typography {
+                    color: #D4A017 !important;
+                    font-size: 18px;
+                    font-weight: 500;
+                    text-align: center;
+                }
+
+
+            
+
+            .mud-grid ~ .mud-paper table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 15px;
+                background-color: #151515;
+                color: white;
+            }
+
+
+               
+
+                .mud-grid ~ .mud-paper table th {
+                    background-color: #1d1d1d;
+                    color: #D4A017;
+                    padding: 14px;
+                    border: 1px solid #333333;
+                    text-align: left;
+                    font-weight: 600;
+                }
+
+
+               
+
+                .mud-grid ~ .mud-paper table td {
+                    padding: 14px;
+                    border: 1px solid #333333;
+                    color: #dddddd;
+                }
+
+
+               
+
+                .mud-grid ~ .mud-paper table tr:hover {
+                    background-color: #222222;
+                }
+
+
+            
+
+            .mud-grid ~ .mud-paper .mud-list {
+                background-color: transparent !important;
+                margin-top: 15px;
+            }
+
+
+            .mud-grid ~ .mud-paper .mud-list-item {
+                color: #dddddd !important;
+                border-bottom: 1px solid #333333;
+                padding: 15px 10px;
+            }
+
+
+               
+
+                .mud-grid ~ .mud-paper .mud-list-item:hover {
+                    background-color: #222222 !important;
+                    color: #D4A017 !important;
+                }
+
+
+   
+
+    @@media (max-width: 1000px) {
+
+        .mud-grid {
+            width: 190px;
+        }
+
+
+            .mud-grid ~ .mud-paper {
+                margin-left: 205px;
+                margin-right: 15px;
+            }
+
+
+                .mud-grid ~ .mud-paper .mud-card {
+                    width: calc(50% - 10px);
+                    margin-right: 10px;
+                }
+    }
+
+
+   
+
+    @@media (max-width: 650px) {
+
+        .mud-grid {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: auto;
+            border-right: none;
+            border-bottom: 1px solid #D4A017;
+            padding: 20px 15px;
+        }
+
+
+            .mud-grid ~ .mud-paper {
+                margin-left: 10px;
+                margin-right: 10px;
+                margin-top: 15px;
+                padding: 15px;
+            }
+
+
+                .mud-grid ~ .mud-paper .mud-card {
+                    width: 100%;
+                    margin-right: 0;
+                    margin-top: 10px;
+                }
+
+
+                .mud-grid ~ .mud-paper table {
+                    font-size: 13px;
+                }
+    }
+
+</style>

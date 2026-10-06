@@ -8,13 +8,17 @@
     <MudCard Class="ticket-container">
         <div class="ticket-div">
 
-        @foreach (var ticket in tickets)
-    {
-        <MudText>Date:@ticket.Date </MudText>
-        <MudText>Time:@ticket.Time </MudText>
-        <MudText>Cinemas:@ticket.Cinemas </MudText>
-        <MudText>Seats:@ticket.Seats  </MudText>
-    }
+                @if (ticket != null)
+                {
+                    <MudText>Date: @ticket.Date</MudText>
+                    <MudText>Time: @ticket.Time</MudText>
+                    <MudText>Cinemas: @ticket.Cinemas</MudText>
+                    <MudText>Seats: @ticket.Seats</MudText>
+                }
+                else
+                {
+                    <MudText>No ticket details found.</MudText>
+                }
         </div>
 
         <div class="message">
@@ -72,25 +76,32 @@
 
   
 
-       private List<TicketModel> tickets = new();
+    private TicketModel? ticket;
 
     
     private bool isLoading = true;
 
+    
     protected override async Task OnInitializedAsync()
     {
         try
         {
-           
-            tickets = await Http.GetFromJsonAsync<List<TicketModel>>(
-                            $"https://localhost:7218/api/Ticket/{BookingId}"
-            ) ?? new List<TicketModel>();
+            var response = await Http.GetAsync(
+                $"https://localhost:7218/api/Ticket/{BookingId}");
 
-            
+            if (response.IsSuccessStatusCode)
+            {
+                ticket = await response.Content
+                    .ReadFromJsonAsync<TicketModel>();
+            }
+            else
+            {
+                Console.WriteLine($"Ticket error: {response.StatusCode}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load tickets: {ex.Message}");
+            Console.WriteLine($"Failed to load ticket: {ex.Message}");
         }
         finally
         {

@@ -238,7 +238,7 @@
     private MudForm? form;
     private bool isValid;
 
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; } = DateTime.Today;
     public string Time { get; set; } = string.Empty;
     public string cinemas { get; set; } = string.Empty;
     public int Tickets { get; set; }
@@ -334,7 +334,7 @@
                 Seats = Seats,
                 Time = Time,
                 Cinemas = cinemas,
-                Date = Date,
+                Date = Date.Value,
                 Tickets = Tickets,
                 RegisterId = RegisterId
 
@@ -343,7 +343,12 @@
 
             if (response.IsSuccessStatusCode)
             {
-                Navigation.NavigateTo("/payment");
+                var booking = await response.Content.ReadFromJsonAsync<BookingResponse>();
+
+                if (booking != null)
+                {
+                    Navigation.NavigateTo($"/payment/{booking.Id}");
+                }
             }
             else
             {
@@ -354,6 +359,12 @@
         }
 
     }
+
+    public class BookingResponse
+    {
+        public int Id { get; set; }
+    }
+    
 }
 
     
