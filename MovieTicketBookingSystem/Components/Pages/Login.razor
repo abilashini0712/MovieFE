@@ -141,29 +141,7 @@
         public string email { get; set; }
     }
 
-   /*private async Task goLogin()
-    {
-        await form.Validate();
-
-        if (form.IsValid)
-        {
-            var loginData = new
-            {
-                UserName = UserName,
-
-                Password = Password,
-
-                
-
-            };
-            var response = await Http.PostAsJsonAsync("https://localhost:7218/api/Auth/login", loginData);
-
-            if (response.IsSuccessStatusCode)
-            {
-                Navigation.NavigateTo($"/booking/{RegisterId}");
-            }
-        }
-    }*/
+  
     private async Task goLogin()
     {
         await form.Validate();
@@ -192,6 +170,13 @@
                     Navigation.NavigateTo(
                         $"/booking/{result.userId}");
                 }
+
+                if(UserName=="admin@gmail.com" && Password=="admin123"){
+        Navigation.NavigateTo("/dashboard");
+                    }
+                    
+                
+
             }
             else
             {

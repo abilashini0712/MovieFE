@@ -8,8 +8,8 @@
             <MudText Class="payment-title">Payment Details</MudText>
 
             <MudTextField T="string" Label="Cardholder Name" @bind-Value="name" Class="payment-field" Required="true" />
-            <MudTextField T="string" Label="Card Number" @bind-Value="number" Class="payment-field"  Required="true"/>
-            <MudTextField T="string" Label="Expiry Date" @bind-Value="date" Class="payment-field" Required="true"/>
+            <MudTextField T="string" Label="Card Number" @bind-Value="number" Class="payment-field"  Required="true"  />
+            <MudTextField T="string" Label="Expiry Date" @bind-Value="date" Class="payment-field" Required="true" />
             <MudTextField T="int" Label="CVV" @bind-Value="cvv" Class="payment-field" Required="true" />
 
             <MudButton OnClick="pay" Class="pay-btn" FullWidth="true">
@@ -124,12 +124,27 @@
     {
         public int? id { get; set; }
         public string name { get; set; }
-        public int? number { get; set; }
+        public string number { get; set; }
         public string date { get; set; }
         public int? cvv { get; set; }
 
 
     } 
+
+
+ /* private string? ValidateCardNumber(string value)
+{
+    if (string.IsNullOrWhiteSpace(value))
+        return "Card number is required.";
+
+    if (value.Length != 12)
+        return "Card number must contain exactly 12 digits.";
+
+    if (!value.All(char.IsDigit))
+        return "Card number must contain only digits.";
+
+    return null;
+} */
 
 
 [Parameter]
@@ -141,6 +156,8 @@ public int BookingId {get; set;}
 
         if (form.IsValid)
         {
+          //return;
+            
             var paymentData = new
             {
                 name = name,
@@ -156,6 +173,7 @@ public int BookingId {get; set;}
 
             if (response.IsSuccessStatusCode)
             {
+                
                 Navigation.NavigateTo($"/ticket/{BookingId}");
             }
         }
@@ -166,5 +184,5 @@ public int BookingId {get; set;}
     public string date { get; set; } = string.Empty;
     public int cvv { get; set; } 
     
-
+   
 }

@@ -21,24 +21,28 @@
         <MudCard>
 
             <MudText> Movies </MudText>
+            <MudText>10</MudText>
 
         </MudCard>
 
         <MudCard>
 
             <MudText> Bookings </MudText>
+            <MudText>200</MudText>
 
         </MudCard>
 
         <MudCard>
 
             <MudText> Users </MudText>
+            <MudText>100</MudText>
 
         </MudCard>
 
         <MudCard>
 
             <MudText> Revenue </MudText>
+            <MudText>50000</MudText>
 
         </MudCard>
 
@@ -129,21 +133,7 @@
 </div>
 
 @code {
-    @* private List<Dashboard> Dashboards = new()
-    {
-        new Dashboard { id = 0001, user = "abc", movie = "3bhk", seats = "2", date="2026-09-16" }
-    };
-
-    private class Dashboard
-    {
-        public int id { get; set; }
-        public string user { get; set; } = "";
-        public string movie { get; set; } = "";
-        public string seats { get; set; } = "";
-        public string date { get; set; } = "";
-    }
-    *@
-
+   
 
     private void addMovie()
     {
@@ -181,9 +171,7 @@
     }
 
 
-        /* =========================
-           ADMIN TITLE
-           ========================= */
+      
 
         .mud-grid .mud-typography {
             color: #D4A017 !important;
