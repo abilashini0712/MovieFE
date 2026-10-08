@@ -23,6 +23,11 @@
                       @bind-Value="Duration"
                       Required="true" />
 
+        <MudSelect T="string" Label="Choose Status" @bind-Value="Show" Variant="Variant.Outlined">
+            <MudSelectItem T="string" Value="@("now showing")">Now Showing</MudSelectItem>
+            <MudSelectItem T="string" Value="@("up comming")">Up Comming</MudSelectItem>
+        </MudSelect>
+
         <MudFileUpload T="IBrowserFile"
                        FilesChanged="UploadFiles"
                        Accept="image/*">
@@ -149,6 +154,7 @@
     private string Title { get; set; } = string.Empty;
     private string Gener { get; set; } = string.Empty;
     private string Duration { get; set; } = string.Empty;
+    private string Show { get; set; } = "";
 
     private IBrowserFile? PosterFile;
     private byte[]? image;
@@ -184,7 +190,8 @@
             title = Title,
             duration = Duration,
             gener = Gener,
-            image = image
+            image = image,
+            show = Show
         };
 
         var response = await Http.PostAsJsonAsync(
