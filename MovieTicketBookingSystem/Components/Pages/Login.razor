@@ -155,7 +155,7 @@
             };
 
             var response = await Http.PostAsJsonAsync(
-                "https://localhost:7218/api/Auth/login",
+                "http://localhost:5264/api/Auth/login",
                 loginData);
 
             if (response.IsSuccessStatusCode)

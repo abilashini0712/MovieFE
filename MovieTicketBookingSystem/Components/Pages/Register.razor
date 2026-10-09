@@ -8,9 +8,9 @@
 
             <MudText Class="login-title">Register</MudText>
 
-            <MudTextField T="string" Label="Name" @bind-Value="Name"
+           @* <MudTextField T="string" Label="Name" @bind-Value="Name"
                            Class="login-field"
-                           />
+                           />*@
 
             <MudTextField T="string" Label="Email" @bind-Value="Email"
                            Class="login-field" />
@@ -133,7 +133,7 @@
 
 @code {
     private MudForm form;
-    private string Name { get; set; } = string.Empty;
+   // private string Name { get; set; } = string.Empty;
     private string Email { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
 
@@ -145,12 +145,12 @@
         {
             var registerData = new
             {
-                Name = Name,
+                //Name = Name,
                 Email = Email,
                 Password = Password
 
             };
-            var response = await Http.PostAsJsonAsync("https://localhost:7218/api/Auth/register", registerData);
+            var response = await Http.PostAsJsonAsync("http://localhost:5264/api/Auth/register", registerData);
 
             if (response.IsSuccessStatusCode)
             {
