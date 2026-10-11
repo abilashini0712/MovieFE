@@ -1,5 +1,5 @@
 ﻿@page "/payment/{BookingId:int}"
-@inject HttpClient Http 
+@inject HttpClient Http
 @inject NavigationManager Navigation
 
 <div class="login-wrapper">
@@ -8,9 +8,28 @@
             <MudText Class="payment-title">Payment Details</MudText>
 
             <MudTextField T="string" Label="Cardholder Name" @bind-Value="name" Class="payment-field" Required="true" />
-            <MudTextField T="string" Label="Card Number" @bind-Value="number" Class="payment-field"  Required="true"  />
+
+            @* CHANGED: added MaxLength + Validation + Immediate so the user cannot type more than the allowed digits *@
+            <MudTextField T="string"
+                          Label="Card Number"
+                          @bind-Value="number"
+                          Class="payment-field"
+                          Required="true"
+                          MaxLength="CardNumberLength"
+                          Immediate="true"
+                          Validation="@((Func<string, string?>)ValidateCardNumber)" />
+
             <MudTextField T="string" Label="Expiry Date" @bind-Value="date" Class="payment-field" Required="true" />
-            <MudTextField T="int" Label="CVV" @bind-Value="cvv" Class="payment-field" Required="true" />
+
+            @* CHANGED: CVV is now a string (an int would drop leading zeros like 012), with MaxLength + Validation *@
+            <MudTextField T="string"
+                          Label="CVV"
+                          @bind-Value="cvv"
+                          Class="payment-field"
+                          Required="true"
+                          MaxLength="CvvLength"
+                          Immediate="true"
+                          Validation="@((Func<string, string?>)ValidateCvv)" />
 
             <MudButton OnClick="pay" Class="pay-btn" FullWidth="true">
                 Pay
@@ -120,6 +139,10 @@
 @code {
     private MudForm? form;
 
+    // CHANGED: change these two numbers if you want different limits (e.g. 16 for a real card)
+    private const int CardNumberLength = 12;
+    private const int CvvLength = 3;
+
     public class PaymentResponse
     {
         public int? id { get; set; }
@@ -127,28 +150,40 @@
         public string number { get; set; }
         public string date { get; set; }
         public int? cvv { get; set; }
+    }
 
+    // CHANGED: card number rules (required, digits only, exact length)
+    private string? ValidateCardNumber(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return "Card number is required.";
 
-    } 
+        if (!value.All(char.IsDigit))
+            return "Card number must contain only digits.";
 
+        if (value.Length != CardNumberLength)
+            return $"Card number must contain exactly {CardNumberLength} digits.";
 
- /* private string? ValidateCardNumber(string value)
-{
-    if (string.IsNullOrWhiteSpace(value))
-        return "Card number is required.";
+        return null; // null means "valid"
+    }
 
-    if (value.Length != 12)
-        return "Card number must contain exactly 12 digits.";
+    // CHANGED: CVV rules (required, digits only, exact length)
+    private string? ValidateCvv(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return "CVV is required.";
 
-    if (!value.All(char.IsDigit))
-        return "Card number must contain only digits.";
+        if (!value.All(char.IsDigit))
+            return "CVV must contain only digits.";
 
-    return null;
-} */
+        if (value.Length != CvvLength)
+            return $"CVV must contain exactly {CvvLength} digits.";
 
+        return null;
+    }
 
-[Parameter]
-public int BookingId {get; set;}
+    [Parameter]
+    public int BookingId { get; set; }
 
     private async Task pay()
     {
@@ -156,8 +191,6 @@ public int BookingId {get; set;}
 
         if (form.IsValid)
         {
-          //return;
-            
             var paymentData = new
             {
                 name = name,
@@ -173,7 +206,6 @@ public int BookingId {get; set;}
 
             if (response.IsSuccessStatusCode)
             {
-                
                 Navigation.NavigateTo($"/ticket/{BookingId}");
             }
         }
@@ -182,7 +214,5 @@ public int BookingId {get; set;}
     public string name { get; set; } = string.Empty;
     public string number { get; set; } = string.Empty;
     public string date { get; set; } = string.Empty;
-    public int cvv { get; set; } 
-    
-   
+    public string cvv { get; set; } = string.Empty; // CHANGED: int -> string
 }

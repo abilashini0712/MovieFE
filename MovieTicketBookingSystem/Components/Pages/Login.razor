@@ -9,12 +9,12 @@
             <MudText Class="login-title">Login Form</MudText>
 
             <MudTextField T="string" Label="UserName or Email" @bind-Value="UserName"
-                          Class="login-field" Required="true"/>
+                          Class="login-field" Required="true" />
 
             <MudTextField T="string" Label="Password" @bind-Value="Password"
-                          InputType="InputType.Password"  Class="login-field"  Required="true"/>
+                          InputType="InputType.Password" Class="login-field" Required="true" />
 
-            
+
 
             <MudButton OnClick="goLogin" Class="login-btn" FullWidth="true">
                 Login
@@ -67,7 +67,7 @@
             color: #ffffff !important;
         }
 
-        
+
         .login-field .mud-input:before,
         .login-field .mud-input:after {
             border-color: #D4A017 !important;
@@ -126,11 +126,11 @@
 
 @code {
     private MudForm form;
-    private string UserName  = "";
-    private string Password  = "";
+    private string UserName = "";
+    private string Password = "";
 
-  /* [Parameter]
-    public int RegisterId { get; set; } */
+    /* [Parameter]
+      public int RegisterId { get; set; } */
 
 
     public class LoginResponse
@@ -139,9 +139,10 @@
         public int? userId { get; set; }
         public string name { get; set; }
         public string email { get; set; }
+        public bool isAdmin { get; set; }   // NEW: the backend tells us if this is the admin
     }
 
-  
+
     private async Task goLogin()
     {
         await form.Validate();
@@ -165,18 +166,17 @@
 
                 if (result != null)
                 {
-                    Console.WriteLine($"Logged-in RegisterId = {result.userId}");
-
-                    Navigation.NavigateTo(
-                        $"/booking/{result.userId}");
-                }
-
-                if(UserName=="admin@gmail.com" && Password=="admin123"){
-        Navigation.NavigateTo("/dashboard");
+                    // The backend decides who is an admin, not this page.
+                    if (result.isAdmin)
+                    {
+                        Navigation.NavigateTo("/dashboard");
                     }
-                    
-                
-
+                    else
+                    {
+                        Console.WriteLine($"Logged-in RegisterId = {result.userId}");
+                        Navigation.NavigateTo($"/booking/{result.userId}");
+                    }
+                }
             }
             else
             {
