@@ -1,6 +1,8 @@
 ﻿@page "/booking/{RegisterId:int}"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 
 

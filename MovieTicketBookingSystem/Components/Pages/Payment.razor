@@ -1,6 +1,9 @@
 ﻿@page "/payment/{BookingId:int}"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
 
 <div class="login-wrapper">
     <MudPaper Class="payment-card">
@@ -9,7 +12,7 @@
 
             <MudTextField T="string" Label="Cardholder Name" @bind-Value="name" Class="payment-field" Required="true" />
 
-            @* CHANGED: added MaxLength + Validation + Immediate so the user cannot type more than the allowed digits *@
+           
             <MudTextField T="string"
                           Label="Card Number"
                           @bind-Value="number"
@@ -19,9 +22,18 @@
                           Immediate="true"
                           Validation="@((Func<string, string?>)ValidateCardNumber)" />
 
-            <MudTextField T="string" Label="Expiry Date" @bind-Value="date" Class="payment-field" Required="true" />
+          
 
-            @* CHANGED: CVV is now a string (an int would drop leading zeros like 012), with MaxLength + Validation *@
+           <MudTextField T="string"
+              Label="Expiry Date (MM/YY)"
+              @bind-Value="date"
+              Class="payment-field"
+              Required="true"
+              Mask="@(new PatternMask("00/00"))"
+              Placeholder="MM/YY"
+              Validation="ValidateExpiryDate" />
+
+           
             <MudTextField T="string"
                           Label="CVV"
                           @bind-Value="cvv"
@@ -139,8 +151,8 @@
 @code {
     private MudForm? form;
 
-    // CHANGED: change these two numbers if you want different limits (e.g. 16 for a real card)
-    private const int CardNumberLength = 12;
+
+    private const int CardNumberLength = 16;
     private const int CvvLength = 3;
 
     public class PaymentResponse
@@ -152,7 +164,7 @@
         public int? cvv { get; set; }
     }
 
-    // CHANGED: card number rules (required, digits only, exact length)
+
     private string? ValidateCardNumber(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -164,10 +176,32 @@
         if (value.Length != CardNumberLength)
             return $"Card number must contain exactly {CardNumberLength} digits.";
 
-        return null; // null means "valid"
+        return null; 
     }
 
-    // CHANGED: CVV rules (required, digits only, exact length)
+    private string? ValidateExpiryDate(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        return "Expiry date is required.";
+
+        if (!System.Text.RegularExpressions.Regex.IsMatch(
+                value, @"^(0[1-9]|1[0-2])/\d{2}$"))
+            return "Enter a valid date in MM/YY format.";
+
+        var parts = value.Split('/');
+        int month = int.Parse(parts[0]);
+        int year = 2000 + int.Parse(parts[1]);
+
+        var today = DateTime.Today;
+        var expiry = new DateTime(year, month, 1);
+
+        if (expiry < new DateTime(today.Year, today.Month, 1))
+            return "Card has expired.";
+
+        return null;
+    }
+
+    
     private string? ValidateCvv(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -214,5 +248,5 @@
     public string name { get; set; } = string.Empty;
     public string number { get; set; } = string.Empty;
     public string date { get; set; } = string.Empty;
-    public string cvv { get; set; } = string.Empty; // CHANGED: int -> string
+    public string cvv { get; set; } = string.Empty; 
 }

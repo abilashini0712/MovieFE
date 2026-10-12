@@ -1,6 +1,8 @@
 ﻿@page "/login"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 <div class="login-wrapper">
     <MudPaper Class="login-card">
@@ -129,8 +131,7 @@
     private string UserName = "";
     private string Password = "";
 
-    /* [Parameter]
-      public int RegisterId { get; set; } */
+   
 
 
     public class LoginResponse
@@ -139,7 +140,7 @@
         public int? userId { get; set; }
         public string name { get; set; }
         public string email { get; set; }
-        public bool isAdmin { get; set; }   // NEW: the backend tells us if this is the admin
+        public bool isAdmin { get; set; }   
     }
 
 
@@ -166,7 +167,7 @@
 
                 if (result != null)
                 {
-                    // The backend decides who is an admin, not this page.
+                    
                     if (result.isAdmin)
                     {
                         Navigation.NavigateTo("/dashboard");

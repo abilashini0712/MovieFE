@@ -1,6 +1,8 @@
 ﻿@page "/register"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 <div class="login-wrapper">
     <MudPaper Class="login-card">

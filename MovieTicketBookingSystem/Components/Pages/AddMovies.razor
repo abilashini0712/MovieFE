@@ -1,6 +1,8 @@
 ﻿@page "/addMovies"
 @inject NavigationManager Navigation
 @inject HttpClient Http
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 <MudPaper Class="pa-4 add-movie-card">
 
