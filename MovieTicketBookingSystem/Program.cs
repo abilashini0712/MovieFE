@@ -1,4 +1,5 @@
 using MovieTicketBookingSystem.Components;
+using MovieTicketBookingSystem.Services;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddMudServices();
 
 // Add HttpClient
 builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<TokenService>();
 
 var app = builder.Build();
 
