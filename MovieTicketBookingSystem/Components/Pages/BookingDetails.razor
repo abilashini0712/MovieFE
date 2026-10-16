@@ -1,0 +1,274 @@
+﻿
+@page "/bookingDetails"
+
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+@inject HttpClient Http
+
+<div class="booking-page">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="booking-container">
+        <MudPaper Class="booking-panel" Elevation="4">
+
+            <div class="booking-heading">
+                <MudText Typo="Typo.h5" Class="booking-title">
+                    All Bookings
+                </MudText>
+
+                <MudText Class="booking-subtitle">
+                    View and manage customer bookings
+                </MudText>
+            </div>
+
+            @if (isLoading)
+            {
+                <div class="loading-area">
+                    <MudProgressCircular Indeterminate="true"
+                                         Color="Color.Warning" />
+                    <MudText Class="gold-text">
+                        Loading bookings...
+                    </MudText>
+                </div>
+            }
+            else if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <MudAlert Severity="Severity.Error" Variant="Variant.Filled">
+                    @errorMessage
+                </MudAlert>
+            }
+            else if (bookings.Count == 0)
+            {
+                <div class="empty-area">
+                    <MudText Class="gold-text">
+                        No bookings found.
+                    </MudText>
+                </div>
+            }
+            else
+            {
+                <div class="booking-table-wrapper">
+                    <MudTable Items="@bookings"
+                              Hover="true"
+                              Striped="true"
+                              Bordered="true"
+                              Class="booking-table">
+
+                        <HeaderContent>
+                            <MudTh>Booking ID</MudTh>
+                            <MudTh>Date</MudTh>
+                            <MudTh>Time</MudTh>
+                            <MudTh>Cinema</MudTh>
+                            <MudTh>Tickets</MudTh>
+                            <MudTh>Seats</MudTh>
+                        </HeaderContent>
+
+                        <RowTemplate>
+                            <MudTd DataLabel="Booking ID">
+                                <span class="booking-id">
+                                    #@context.Id
+                                </span>
+                            </MudTd>
+
+                            <MudTd DataLabel="Date">
+                                @context.Date.ToString("dd/MM/yyyy")
+                            </MudTd>
+
+                            <MudTd DataLabel="Time">
+                                @context.Time
+                            </MudTd>
+
+                            <MudTd DataLabel="Cinema">
+                                @context.Cinemas
+                            </MudTd>
+
+                            <MudTd DataLabel="Tickets">
+                                @context.Tickets
+                            </MudTd>
+
+                            <MudTd DataLabel="Seats">
+                                @context.Seats
+                            </MudTd>
+                        </RowTemplate>
+
+                    </MudTable>
+                </div>
+            }
+
+        </MudPaper>
+    </MudContainer>
+</div>
+
+@code {
+    private List<BookingResponse> bookings = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await Http.GetAsync(
+                "https://localhost:7218/api/Booking");
+
+            if (response.IsSuccessStatusCode)
+            {
+                bookings = await response.Content
+                    .ReadFromJsonAsync<List<BookingResponse>>()
+                    ?? new List<BookingResponse>();
+            }
+            else
+            {
+                errorMessage =
+                    $"Unable to load bookings. API status: " +
+                    $"{(int)response.StatusCode} {response.StatusCode}.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading bookings: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    public class BookingResponse
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public string Time { get; set; } = string.Empty;
+        public string Cinemas { get; set; } = string.Empty;
+        public int Tickets { get; set; }
+        public string Seats { get; set; } = string.Empty;
+    }
+}
+
+<style>
+    .booking-page {
+        min-height: 100vh;
+        padding: 35px 15px;
+        background-color: #000000;
+        color: #ffffff;
+    }
+
+    .booking-container {
+        margin: 0 auto;
+    }
+
+    .booking-panel {
+        padding: 28px;
+        background-color: #111111 !important;
+        color: #ffffff !important;
+        border: 1px solid #D4A017;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(212, 160, 23, 0.10);
+    }
+
+    .booking-heading {
+        margin-bottom: 25px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid #383020;
+    }
+
+    .booking-title {
+        color: #D4A017 !important;
+        font-size: 26px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.5px;
+    }
+
+    .booking-subtitle {
+        margin-top: 8px;
+        color: #bbbbbb !important;
+        font-size: 14px;
+    }
+
+    .gold-text {
+        color: #D4A017 !important;
+    }
+
+    .loading-area,
+    .empty-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 140px;
+        padding: 20px;
+        background-color: #181818;
+        border: 1px solid #383020;
+        border-radius: 8px;
+    }
+
+    .booking-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        border: 1px solid #493b16;
+        border-radius: 8px;
+    }
+
+    .booking-table {
+        background-color: #151515 !important;
+        color: #eeeeee !important;
+    }
+
+    .booking-table .mud-table-head {
+        background-color: #252015 !important;
+    }
+
+    .booking-table .mud-table-head .mud-table-cell {
+        color: #D4A017 !important;
+        font-weight: 700 !important;
+        font-size: 14px;
+        padding: 16px;
+        border-bottom: 2px solid #D4A017 !important;
+        white-space: nowrap;
+    }
+
+    .booking-table .mud-table-body .mud-table-cell {
+        color: #eeeeee !important;
+        padding: 15px 16px;
+        border-color: #333333 !important;
+    }
+
+    .booking-table .mud-table-body .mud-table-row {
+        background-color: #151515 !important;
+        transition: background-color 0.2s ease;
+    }
+
+    .booking-table .mud-table-body .mud-table-row:nth-child(even) {
+        background-color: #1b1b1b !important;
+    }
+
+    .booking-table .mud-table-body .mud-table-row:hover {
+        background-color: #302815 !important;
+    }
+
+    .booking-id {
+        color: #D4A017;
+        font-weight: 700;
+    }
+
+    @@media (max-width: 768px) {
+        .booking-page {
+            padding: 20px 10px;
+        }
+
+        .booking-panel {
+            padding: 16px;
+        }
+
+        .booking-title {
+            font-size: 22px !important;
+        }
+
+        .booking-table .mud-table-head .mud-table-cell,
+        .booking-table .mud-table-body .mud-table-cell {
+            padding: 12px 10px;
+            font-size: 13px;
+        }
+    }
+</style>

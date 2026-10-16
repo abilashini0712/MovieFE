@@ -10,7 +10,8 @@
 
         <MudText>ADMIN </MudText>
        
-        <MudButton onclick="addMovie"> Movie </MudButton>
+        <MudButton onclick="addMovie"> Add Movies </MudButton>
+        <MudButton onclick ="bDetails">Bookings</MudButton>
        
 
     </MudGrid>
@@ -43,7 +44,7 @@
         <MudCard>
 
             <MudText> Revenue </MudText>
-            <MudText>50000</MudText>
+            <MudText>$50000</MudText>
 
         </MudCard>
 
@@ -134,11 +135,17 @@
 </div>
 
 @code {
-   
+
+    
 
     private void addMovie()
     {
         Navigation.NavigateTo("/addMovies");
+    }
+
+    private void bDetails()
+    {
+        Navigation.NavigateTo($"/bookingDetails");
     }
 }
 

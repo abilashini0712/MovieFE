@@ -1,18 +1,23 @@
-﻿namespace MovieTicketBookingSystem.Services
+﻿
+namespace MovieTicketBookingSystem.Services
 {
     public class TokenService
     {
-        public string? Token { get; private set; }
+        private string? _token;
 
         public void SetToken(string token)
         {
-            Token = token;
+            _token = token;
         }
 
-        public void ClearToken() 
+        public string? GetToken()
         {
-            Token = null;
+            return _token;
         }
-        
+
+        public void ClearToken()
+        {
+            _token = null;
+        }
     }
 }

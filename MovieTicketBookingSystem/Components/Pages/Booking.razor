@@ -81,9 +81,12 @@
                 <MudCheckBox @bind-Value="c10" Label="C10" Class="seat-check" />
             </div>
 
-            <MudButton  onClick="Payment" Class="pay-btn" FullWidth="true">
-                Process To Payment
-            </MudButton>
+          <MudButton OnClick="Payment"
+           Class="pay-btn"
+           FullWidth="true"
+           Disabled="@isProcessing">
+    Process To Payment
+</MudButton>
 
         </MudForm>
     </MudPaper>
@@ -282,6 +285,8 @@
     [Parameter]
     public int RegisterId { get; set; } 
 
+    private bool isProcessing = false;
+
     private void SelectSeats()
     {
         var select = new List<string>();
@@ -323,50 +328,110 @@
 
     }
 
-    private async Task Payment()
+   
+private async Task Payment()
+{
+    if (form == null || isProcessing)
+        return;
+
+    try
     {
+        isProcessing = true;
+
         await form.Validate();
 
-        if (form.IsValid)
+        if (!form.IsValid)
+            return;
+
+        if (Date == null)
         {
-            SelectSeats();
+            Console.WriteLine("Please select a booking date.");
+            return;
+        }
 
-            var bookingData = new
+        if (Tickets <= 0)
+        {
+            Console.WriteLine("Number of tickets must be greater than zero.");
+            return;
+        }
+
+       
+        SelectSeats();
+
+        if (string.IsNullOrWhiteSpace(Seats))
+        {
+            Console.WriteLine("Please select at least one seat.");
+            return;
+        }
+
+        var selectedSeatList = Seats.Split(
+            ',',
+            StringSplitOptions.RemoveEmptyEntries);
+
+        if (selectedSeatList.Length != Tickets)
+        {
+            Console.WriteLine(
+                "The number of selected seats must equal the number of tickets.");
+            return;
+        }
+
+        var bookingData = new
+        {
+            Seats = Seats,
+            Time = Time,
+            Cinemas = cinemas,
+            Date = Date.Value,
+            Tickets = Tickets,
+            RegisterId = RegisterId
+        };
+
+       
+        var response = await Http.PostAsJsonAsync(
+            "https://localhost:7218/api/Booking",
+            bookingData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var booking = await response.Content
+                .ReadFromJsonAsync<BookingResponse>();
+
+            if (booking != null && booking.Id > 0)
             {
-                Seats = Seats,
-                Time = Time,
-                Cinemas = cinemas,
-                Date = Date.Value,
-                Tickets = Tickets,
-                RegisterId = RegisterId
-
-            };
-            var response = await Http.PostAsJsonAsync("https://localhost:7218/api/Booking", bookingData);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var booking = await response.Content.ReadFromJsonAsync<BookingResponse>();
-
-                if (booking != null)
-                {
-                    Navigation.NavigateTo($"/payment/{booking.Id}");
-                }
+             
+                Navigation.NavigateTo($"/payment/{booking.Id}");
             }
             else
             {
-                var error = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Booking failed: {response.StatusCode}");
-                Console.WriteLine(error);
+                Console.WriteLine(
+                    "Booking was saved, but no valid booking ID was returned.");
             }
         }
+        else
+        {
+            var error = await response.Content.ReadAsStringAsync();
 
+            Console.WriteLine(
+                $"Booking failed: {(int)response.StatusCode} - {error}");
+        }
     }
-
-    public class BookingResponse
+    catch (Exception ex)
     {
-        public int Id { get; set; }
+        Console.WriteLine($"Error saving booking: {ex.Message}");
     }
+    finally
+    {
+        isProcessing = false;
+    }
+}
+
+public class BookingResponse
+{
+    public int Id { get; set; }
+}
+
+
     
+
 }
 
     
