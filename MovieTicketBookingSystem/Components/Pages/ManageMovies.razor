@@ -1,0 +1,329 @@
+﻿@page "/manageMovies"
+@using MovieTicketBookingSystem.Models
+@using Microsoft.AspNetCore.Authorization
+@inject HttpClient Http
+@inject IDialogService DialogService
+@inject IJSRuntime JS
+@attribute [Authorize]
+
+
+
+@if (editingMovie != null)
+{
+    <MudPaper Class="pa-4 edit-movie-card">
+        <MudText Typo="Typo.h5" Class="edit-title">Edit Movie</MudText>
+
+        <MudTextField T="string" Label="Movie Name" @bind-Value="editingMovie.title" />
+        <MudTextField T="string" Label="Genre" @bind-Value="editingMovie.gener" />
+        <MudTextField T="string" Label="Duration" @bind-Value="editingMovie.duration" />
+
+        <MudSelect T="string" Label="Choose Status" @bind-Value="editingMovie.show" Variant="Variant.Outlined">
+            <MudSelectItem T="string" Value="@("now showing")">Now Showing</MudSelectItem>
+            <MudSelectItem T="string" Value="@("up comming")">Up Comming</MudSelectItem>
+        </MudSelect>
+
+        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Accept="image/*">
+            <ActivatorContent>
+                <MudButton Variant="Variant.Filled" Class="gold-outline-btn">Change Image</MudButton>
+            </ActivatorContent>
+        </MudFileUpload>
+
+        @if (!string.IsNullOrEmpty(newImageName))
+        {
+            <MudText Class="selected-image">New Image: @newImageName</MudText>
+        }
+
+        <div class="edit-actions">
+            <MudButton Class="gold-btn" OnClick="SaveEdit">Save Changes</MudButton>
+            <MudButton Class="cancel-btn" OnClick="CancelEdit">Cancel</MudButton>
+        </div>
+    </MudPaper>
+}
+
+<MudPaper Class="section">
+    <MudText Typo="Typo.h5" Class="title">Now Showing</MudText>
+</MudPaper>
+
+<MudGrid Class="card-container">
+    @if (isLoading)
+    {
+        <MudText Class="title">Loading movies...</MudText>
+    }
+    else if (!movies.Any(m => m.show == "now showing"))
+    {
+        <MudText Class="title">No movies found.</MudText>
+    }
+    else
+    {
+        @foreach (var movie in movies.Where(m => m.show == "now showing"))
+        {
+            <MudItem xs="12" sm="6" md="3">
+                <MovieCard image="@GetImageSrc(movie)"
+                           title="@movie.title"
+                           gener="@movie.gener"
+                           duration="@movie.duration"
+                           IsAdmin="true"
+                           Id="@movie.id"
+                           OnEdit="StartEdit"
+                           OnDelete="DeleteMovie" />
+            </MudItem>
+        }
+    }
+</MudGrid>
+
+
+<MudPaper Class="section">
+    <MudText Typo="Typo.h5" Class="title">Upcoming Movies</MudText>
+</MudPaper>
+
+<MudGrid Class="card-container">
+    @if (isLoading)
+    {
+        <MudText Class="title">Loading movies...</MudText>
+    }
+    else if (!movies.Any(m => m.show == "up comming"))
+    {
+        <MudText Class="title">No movies found.</MudText>
+    }
+    else
+    {
+        @foreach (var movie in movies.Where(m => m.show == "up comming"))
+        {
+            <MudItem xs="12" sm="6" md="3">
+                <MovieCard uimage="@GetImageSrc(movie)"
+                           utitle="@movie.title"
+                           ugener="@movie.gener"
+                           uduration="@movie.duration"
+                           IsAdmin="true"
+                           Id="@movie.id"
+                           OnEdit="StartEdit"
+                           OnDelete="DeleteMovie" />
+            </MudItem>
+        }
+    }
+</MudGrid>
+
+<style>
+    .section {
+        border: 1px solid goldenrod;
+        background-color: black;
+        padding: 20px 30px;
+        margin-bottom: 30px;
+        width: 100%;
+        max-width: 1600px;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+        display: flex;
+    }
+
+    .title { color: white; font-weight: bold; }
+
+    .card-container {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 24px !important;
+        max-width: 1600px;
+        margin: 0 auto 40px auto !important;
+        padding: 0 30px;
+        box-sizing: border-box;
+    }
+
+    .card-container > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex-basis: auto !important;
+        box-sizing: border-box;
+    }
+
+    
+    .edit-movie-card {
+        background-color: #000000 !important;
+        border: 1px solid goldenrod;
+        border-radius: 12px;
+        max-width: 600px;
+        margin: 0 auto 40px auto;
+        padding: 30px !important;
+        box-sizing: border-box;
+    }
+
+    .edit-title {
+        color: gold !important;
+        font-weight: bold !important;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .edit-movie-card .mud-input,
+    .edit-movie-card .mud-input-slot { color: white !important; }
+
+    .edit-movie-card .mud-input-label { color: goldenrod !important; }
+
+    .edit-movie-card .mud-input.mud-input-underline:before {
+        border-bottom: 1px solid goldenrod !important;
+    }
+
+    .gold-outline-btn {
+        background-color: #000000 !important;
+        color: gold !important;
+        border: 1px solid gold !important;
+        border-radius: 8px !important;
+        font-weight: bold !important;
+        margin-top: 20px;
+    }
+
+    .selected-image { color: white !important; margin-top: 10px; }
+
+    .edit-actions { display: flex; gap: 10px; margin-top: 25px; }
+
+    .gold-btn {
+        flex: 1;
+        background-color: gold !important;
+        color: #000000 !important;
+        font-weight: bold !important;
+        border-radius: 8px !important;
+    }
+
+    .cancel-btn {
+        flex: 1;
+        color: white !important;
+        border: 1px solid #777 !important;
+        border-radius: 8px !important;
+    }
+
+    @@media (max-width: 900px) {
+        .card-container { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+
+    @@media (max-width: 600px) {
+        .card-container { grid-template-columns: 1fr !important; padding: 0 15px; }
+    }
+</style>
+
+@code {
+    private List<MovieModel> movies = new();
+    private bool isLoading = true;
+
+    
+    private MovieModel? editingMovie;
+
+    
+    private byte[]? newImage;
+    private string? newImageName;
+
+    private const string ApiUrl = "https://localhost:7218/api/Cards";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMovies();
+    }
+
+    
+    private async Task LoadMovies()
+    {
+        try
+        {
+            movies = await Http.GetFromJsonAsync<List<MovieModel>>(ApiUrl)
+                     ?? new List<MovieModel>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load movies: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    
+    private void StartEdit(int id)
+    {
+        var movie = movies.FirstOrDefault(m => m.id == id);
+        if (movie == null) return;
+
+        
+        editingMovie = new MovieModel
+        {
+            id = movie.id,
+            Image = movie.Image,
+            title = movie.title,
+            gener = movie.gener,
+            duration = movie.duration,
+            show = movie.show
+        };
+
+        newImage = null;
+        newImageName = null;
+    }
+
+    
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        newImageName = file.Name;
+
+        using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+
+        newImage = memoryStream.ToArray();
+    }
+
+    
+    private async Task SaveEdit()
+    {
+        if (editingMovie == null) return;
+
+        
+        if (newImage != null)
+            editingMovie.Image = newImage;
+
+        var response = await Http.PutAsJsonAsync($"{ApiUrl}/{editingMovie.id}", editingMovie);
+
+        if (response.IsSuccessStatusCode)
+        {
+            editingMovie = null;     
+            await LoadMovies();      
+        }
+        else
+        {
+            Console.WriteLine($"Update failed: {response.StatusCode}");
+            Console.WriteLine(await response.Content.ReadAsStringAsync());
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editingMovie = null;
+    }
+
+    
+
+    private async Task DeleteMovie(int id)
+    {
+        
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to delete this movie?");
+
+        if (!confirmed) return;
+
+        var response = await Http.DeleteAsync($"{ApiUrl}/{id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadMovies();      
+        }
+        else
+        {
+            Console.WriteLine($"Delete failed: {response.StatusCode}");
+        }
+    }
+
+     
+    private string GetImageSrc(MovieModel movie)
+    {
+        if (movie.Image == null || movie.Image.Length == 0)
+            return string.Empty;
+
+        return $"data:image/jpeg;base64,{Convert.ToBase64String(movie.Image)}";
+    }
+}

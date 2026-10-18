@@ -2,13 +2,13 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Authorization
-@attribute [AllowAnonymous]
+@attribute [Authorize]
 
 <div class="login-wrapper">
     <MudPaper Class="login-card">
         <MudForm @ref="form">
 
-            <MudText Class="login-title">Register</MudText>
+            <MudText Class="login-title">SignUp</MudText>
 
             <MudTextField T="string" Label="Name" @bind-Value="Name"
                            Class="login-field"
@@ -23,7 +23,7 @@
             <MudButton OnClick="clickRegister" Class="login-btn" FullWidth="true">
                 Register
             </MudButton>
-            <MudText Class="note" > Already have account click <MudLink Href="/login " Underline="Underline.None">Login</MudLink> </MudText>
+            <MudText Class="note"> Already have account click <MudLink Href="/login" Underline="Underline.None" Class="login-link">Login</MudLink> </MudText>
         </MudForm>
     </MudPaper>
 </div>
@@ -131,6 +131,25 @@
     a{
         color: #b8890f;
     }
+
+   
+    .note {
+        color: white;
+    }
+
+    
+    a.login-link {
+        color: gold !important;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+        
+        a.login-link:hover {
+            color: darkgoldenrod !important;
+        }
+
 </style>
 
 @code {

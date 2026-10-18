@@ -24,3 +24,28 @@
         color: goldenrod !important;
         text-decoration: overline;
     }
+
+
+
+.nav-div ::deep .signup-btn {
+    background: gold !important;
+    color: #000000 !important; 
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 6px 20px; 
+    margin-left: 20px; 
+    text-transform: none; 
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap; 
+    box-sizing: border-box;
+}
+
+    
+    .nav-div ::deep .signup-btn:hover {
+        background: darkgoldenrod !important;
+        color: #000000 !important;
+        text-decoration: none;
+    }

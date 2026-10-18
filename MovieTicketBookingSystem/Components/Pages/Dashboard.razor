@@ -12,6 +12,7 @@
        
         <MudButton onclick="addMovie"> Add Movies </MudButton>
         <MudButton onclick ="bDetails">Bookings</MudButton>
+        <MudButton onclick = "manageMovie">Manage Movies </MudButton>
        
 
     </MudGrid>
@@ -53,34 +54,7 @@
 
     <MudPaper>
 
-        @* <MudTable Items="@Dashboards">
-
-            <HeaderContent>
-
-                <MudTh>Booking ID </MudTh>
-         
-                <MudTh> User </MudTh>
-
-                    
-                <MudTh> Movie </MudTh>
-
-                <MudTh> Seats </MudTh>
-
-                 <MudTh> Date   </MudTh>
-
-            </HeaderContent> 
-
-            <RowTemplate>
-                <MudTd > @context.id</MudTd>
-                <MudTd> @context.user </MudTd>
-                <MudTd> @context.movie </MudTd>
-                <MudTd > @context.seats </MudTd>
-                <MudTd> @context.date </MudTd>
-            </RowTemplate>
-
-      
-
-        </MudTable> *@
+       
 
         <table border="1">
             <th>Booking ID</th>
@@ -136,7 +110,7 @@
 
 @code {
 
-    
+
 
     private void addMovie()
     {
@@ -146,6 +120,11 @@
     private void bDetails()
     {
         Navigation.NavigateTo($"/bookingDetails");
+    }
+
+    private void manageMovie()
+    {
+        Navigation.NavigateTo("/manageMovies");
     }
 }
 

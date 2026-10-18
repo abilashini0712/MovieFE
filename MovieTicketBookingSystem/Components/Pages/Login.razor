@@ -4,7 +4,7 @@
 @inject MovieTicketBookingSystem.Services.TokenService TokenService
 @using System.Net.Http.Headers
 @using Microsoft.AspNetCore.Authorization
-@attribute [AllowAnonymous]
+@attribute [Authorize]
 
 <div class="login-wrapper">
     <MudPaper Class="login-card">
@@ -187,11 +187,10 @@
                 return;
             }
 
-            // Store the token using your existing service.
+            
             TokenService.SetToken(result.token);
 
-            // Attach the token to subsequent requests made
-            // through this HttpClient instance.
+            
             Http.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue(
                     "Bearer",

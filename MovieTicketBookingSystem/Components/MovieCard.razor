@@ -1,5 +1,4 @@
-﻿@page "/movieCard"
-@inject NavigationManager Navigation
+﻿@inject NavigationManager Navigation
 
 
 @if (!string.IsNullOrEmpty(image))
@@ -11,6 +10,15 @@
             <MudText Class="gener">@gener</MudText>
             <MudText Class="duration">@duration</MudText>
             <MudButton @onclick="buy" Class="buy-ticket">Buy Now</MudButton>
+
+           
+            @if (IsAdmin)
+            {
+                <div class="admin-buttons">
+                    <MudButton Class="edit-btn" OnClick="() => OnEdit.InvokeAsync(Id)">Edit</MudButton>
+                    <MudButton Class="delete-btn" OnClick="() => OnDelete.InvokeAsync(Id)">Delete</MudButton>
+                </div>
+            }
         </MudCardContent>
     </MudCard>
 }
@@ -25,12 +33,19 @@
             <MudText Class="gener">@ugener</MudText>
             <MudText Class="duration">@uduration</MudText>
             <MudButton Class="upcomming-btn">Comming Soon</MudButton>
+
+            @if (IsAdmin)
+            {
+                <div class="ED-buttons">
+                    <MudButton Class="edit-btn" OnClick="() => OnEdit.InvokeAsync(Id)">Edit</MudButton>
+                    <MudButton Class="delete-btn" OnClick="() => OnDelete.InvokeAsync(Id)">Delete</MudButton>
+                </div>
+            }
         </MudCardContent>
     </MudCard>
 }
 
 <style>
-
     .movie-card {
         background: #090909;
         padding: 20px;
@@ -41,7 +56,6 @@
         box-sizing: border-box;
         height: 100%;
     }
-
 
     .image {
         width: 100%;
@@ -91,6 +105,30 @@
     }
 
     
+    .ED-buttons {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .edit-btn, .delete-btn {
+        flex: 1;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+    .edit-btn {
+        background: transparent;
+        color: gold;
+        border: 1px solid gold;
+    }
+
+    .delete-btn {
+        background: #b71c1c;
+        color: white;
+    }
+
     @@media (max-width: 400px) {
         .movie-card {
             padding: 14px;
@@ -104,25 +142,21 @@
         Navigation.NavigateTo("/register");
     }
 
-    [Parameter]
-    public string image { get; set; } = string.Empty;
-    [Parameter]
-    public string title { get; set; } = string.Empty;
-    [Parameter]
-    public string gener { get; set; } = string.Empty;
-    [Parameter]
-    public string duration { get; set; } = string.Empty;
+    
+    [Parameter] public string image { get; set; } = string.Empty;
+    [Parameter] public string title { get; set; } = string.Empty;
+    [Parameter] public string gener { get; set; } = string.Empty;
+    [Parameter] public string duration { get; set; } = string.Empty;
 
-    [Parameter]
-    public string uimage { get; set; } = string.Empty;
+    
+    [Parameter] public string uimage { get; set; } = string.Empty;
+    [Parameter] public string utitle { get; set; } = string.Empty;
+    [Parameter] public string ugener { get; set; } = string.Empty;
+    [Parameter] public string uduration { get; set; } = string.Empty;
 
-    [Parameter]
-    public string utitle { get; set; } = string.Empty;
-
-    [Parameter]
-    public string ugener { get; set; } = string.Empty;
-
-    [Parameter]
-    public string uduration { get; set; } = string.Empty;
-
+    
+    [Parameter] public bool IsAdmin { get; set; } = false;
+    [Parameter] public int Id { get; set; }                       
+    [Parameter] public EventCallback<int> OnEdit { get; set; }    
+    [Parameter] public EventCallback<int> OnDelete { get; set; }  
 }
