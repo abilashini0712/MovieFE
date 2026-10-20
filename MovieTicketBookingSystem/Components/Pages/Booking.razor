@@ -374,32 +374,18 @@ private async Task Payment()
             return;
         }
 
-       /* var bookingData = new
+        var bookingData = new
         {
             Seats = Seats,
             Time = Time,
             Cinemas = cinemas,
-            Date = Date.Value.Date,
+            Date = Date.Value,
             Tickets = Tickets,
             RegisterId = RegisterId
-        }; */
+        }; 
 
-// this part only added for testing booking date
 
-        Console.WriteLine($"Selected date: {Date:yyyy-MM-dd}");
-
-var bookingData = new
-{
-    Seats = Seats,
-    Time = Time,
-    Cinemas = cinemas,
-    Date = Date.Value,
-    Tickets = Tickets,
-    RegisterId = RegisterId
-};
-
-Console.WriteLine(
-    $"Date sent to API: {bookingData.Date:yyyy-MM-dd}");
+      
 
        
         var response = await Http.PostAsJsonAsync(
