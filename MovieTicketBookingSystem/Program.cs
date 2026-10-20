@@ -16,6 +16,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<TokenService>();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -24,6 +25,8 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
+
+
 
 app.UseHttpsRedirection();
 

@@ -1,0 +1,100 @@
+﻿
+@page "/paymentResult"
+
+@using System.Net.Http.Json
+
+ 
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+
+
+<MudPaper Class="pa-6 ma-6">
+    <MudText Typo="Typo.h5">Payment Result</MudText>
+
+    @if (isChecking)
+    {
+        <MudProgressCircular Indeterminate="true" />
+        <MudText>Checking your payment...</MudText>
+    }
+    else
+    {
+        <MudText>@message</MudText>
+
+        @if (bookingId > 0 && !isPaid)
+        {
+            <MudButton OnClick="CheckPayment"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary">
+                Check Again
+            </MudButton>
+        }
+    }
+</MudPaper>
+
+@code {
+    [SupplyParameterFromQuery(Name = "session_id")]
+    public string? SessionId { get; set; }
+
+    private bool isChecking = true;
+    private bool isPaid;
+    private int bookingId;
+    private string message = "Checking payment status...";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await CheckPayment();
+    }
+
+    private async Task CheckPayment()
+    {
+        isChecking = true;
+        isPaid = false;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(SessionId))
+            {
+                message = "Stripe session ID is missing.";
+                return;
+            }
+
+            var result = await Http.GetFromJsonAsync<PaymentStatusResponse>(
+                $"https://localhost:7218/api/Payment/status/{Uri.EscapeDataString(SessionId)}");
+
+            if (result == null)
+            {
+                message = "Unable to retrieve payment status.";
+                return;
+            }
+
+            bookingId = result.bookingId;
+
+            if (result.status == "Paid")
+            {
+                isPaid = true;
+                message = "Payment successful! Opening your ticket...";
+
+                Navigation.NavigateTo($"/ticket/{bookingId}");
+            }
+            else
+            {
+                message = "Payment is still being confirmed. Please check again shortly.";
+            }
+        }
+        catch (HttpRequestException)
+        {
+            message = "Could not connect to the payment server.";
+        }
+        finally
+        {
+            isChecking = false;
+        }
+    }
+
+    private sealed class PaymentStatusResponse
+    {
+        public string status { get; set; } = string.Empty;
+        public int bookingId { get; set; }
+    }
+}
