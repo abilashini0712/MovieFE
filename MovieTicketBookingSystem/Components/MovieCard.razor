@@ -137,10 +137,11 @@
 </style>
 
 @code {
-    private void buy()
-    {
-        Navigation.NavigateTo("/register");
-    }
+   private void buy()
+{
+    Navigation.NavigateTo(
+        $"/register?movieName={Uri.EscapeDataString(title)}");
+}
 
     
     [Parameter] public string image { get; set; } = string.Empty;

@@ -159,6 +159,11 @@
     private string Email = string.Empty;
     private string Password = string.Empty;
 
+    [SupplyParameterFromQuery(Name = "movieName")]
+public string MovieName { get; set; } = string.Empty;
+
+
+
     private async Task clickRegister()
     {
         await form.Validate();
@@ -181,7 +186,8 @@
 
             if (response.IsSuccessStatusCode)
             {
-                Navigation.NavigateTo("/login");
+               Navigation.NavigateTo(
+    $"/login?movieName={Uri.EscapeDataString(MovieName ?? string.Empty)}");
             }
             else
             {

@@ -13,7 +13,15 @@
             <MudText Class="head">Book Ticket</MudText>
 
             <div class="booking-field">
-                <MudDatePicker T="DateTime" Label="Date" @bind-Value="Date" Variant="Variant.Outlined" Required="true" />
+                <MudTextField T="string" Label="Movie Name" @bind-Value="MovieName"/> 
+            </div>
+
+            <div class="booking-field">
+                <MudDatePicker T="DateOnly?"
+               Label="Date"
+               @bind-Date="Date"
+               Variant="Variant.Outlined"
+               Required="true" />
             </div>
 
             <div class="booking-field">
@@ -244,10 +252,12 @@
     private bool isValid;
 
     public DateTime? Date { get; set; } = DateTime.Today;
+
     public string Time { get; set; } = string.Empty;
     public string cinemas { get; set; } = string.Empty;
     public int Tickets { get; set; }
     public string Seats { get; set; } = string.Empty;
+  
 
     public bool a1 { get; set; } = false;
     public bool a2 { get; set; } = false;
@@ -284,6 +294,9 @@
 
     [Parameter]
     public int RegisterId { get; set; } 
+
+    [SupplyParameterFromQuery(Name = "movieName")]
+public string MovieName { get; set; } = string.Empty;
 
     private bool isProcessing = false;
 
@@ -374,18 +387,29 @@ private async Task Payment()
             return;
         }
 
-        var bookingData = new
-        {
-            Seats = Seats,
-            Time = Time,
-            Cinemas = cinemas,
-            Date = Date.Value,
-            Tickets = Tickets,
-            RegisterId = RegisterId
-        }; 
+       
 
+       if (Date == null)
+{
+    Console.WriteLine("Please select a booking date.");
+    return;
+}
 
-      
+var selectedDate = Date.Value;
+
+Console.WriteLine(
+    $"Selected date in frontend: {selectedDate:yyyy-MM-dd}");
+
+var bookingData = new
+{
+    Seats = Seats,
+    Time = Time,
+    Cinemas = cinemas,
+    Date = selectedDate.ToString("yyyy-MM-dd"),
+    Tickets = Tickets,
+    RegisterId = RegisterId,
+    MovieName = MovieName
+};
 
        
         var response = await Http.PostAsJsonAsync(

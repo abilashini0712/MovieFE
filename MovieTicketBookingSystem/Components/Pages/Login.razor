@@ -135,6 +135,13 @@
     private string UserName = string.Empty;
     private string Password = string.Empty;
 
+    [Parameter]
+    public int RegisterId { get; set; }
+
+    
+    [SupplyParameterFromQuery(Name = "movieName")]
+public string MovieName { get; set; } = string.Empty;
+
     public class LoginResponse
     {
         public string message { get; set; } = string.Empty;
@@ -144,6 +151,8 @@
         public string email { get; set; } = string.Empty;
         public bool isAdmin { get; set; }
     }
+
+
 
     private async Task goLogin()
     {
@@ -200,11 +209,11 @@
             {
                 Navigation.NavigateTo("/dashboard");
             }
-            else if (result.userId.HasValue)
-            {
-                Navigation.NavigateTo(
-                    $"/booking/{result.userId.Value}");
-            }
+         else if (result.userId.HasValue)
+{
+    Navigation.NavigateTo(
+        $"/booking/{result.userId.Value}?movieName={Uri.EscapeDataString(MovieName ?? string.Empty)}");
+}
         }
         catch (HttpRequestException ex)
         {
