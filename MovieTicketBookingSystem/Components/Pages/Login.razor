@@ -209,7 +209,7 @@ public string MovieName { get; set; } = string.Empty;
             {
                 Navigation.NavigateTo("/dashboard");
             }
-         else if (result.userId.HasValue)
+        else if (result.userId.HasValue)
 {
     Navigation.NavigateTo(
         $"/booking/{result.userId.Value}?movieName={Uri.EscapeDataString(MovieName ?? string.Empty)}");

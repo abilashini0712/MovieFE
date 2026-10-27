@@ -60,6 +60,7 @@
                             <MudTh>Cinema</MudTh>
                             <MudTh>Tickets</MudTh>
                             <MudTh>Seats</MudTh>
+                            <MudTh>Movie Name</MudTh>
                         </HeaderContent>
 
                         <RowTemplate>
@@ -87,6 +88,10 @@
 
                             <MudTd DataLabel="Seats">
                                 @context.Seats
+                            </MudTd>
+
+                            <MudTd DataLabel="Movie Name">
+                                @context.MovieName
                             </MudTd>
                         </RowTemplate>
 
@@ -141,6 +146,7 @@
         public string Cinemas { get; set; } = string.Empty;
         public int Tickets { get; set; }
         public string Seats { get; set; } = string.Empty;
+        public string MovieName { get; set; } = string.Empty;
     }
 }
 

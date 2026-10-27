@@ -23,7 +23,11 @@
             <MudButton OnClick="clickRegister" Class="login-btn" FullWidth="true">
                 Register
             </MudButton>
-            <MudText Class="note"> Already have account click <MudLink Href="/login" Underline="Underline.None" Class="login-link">Login</MudLink> </MudText>
+            <MudText Class="note"> Already have account click 
+                <MudLink Href="@($"/login?movieName={Uri.EscapeDataString(MovieName ?? string.Empty)}")"Underline="Underline.None" Class="login-link">
+                    Login
+                </MudLink> 
+            </MudText>
         </MudForm>
     </MudPaper>
 </div>
@@ -163,9 +167,10 @@
 public string MovieName { get; set; } = string.Empty;
 
 
-
     private async Task clickRegister()
     {
+        Console.WriteLine($"Register page movie name: '{MovieName}'");
+
         await form.Validate();
 
         if (!form.IsValid)
