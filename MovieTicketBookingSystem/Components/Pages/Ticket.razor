@@ -52,6 +52,8 @@
                             @ticket.MovieName
                         </MudText>
 
+                        
+
                         <MudText Typo="Typo.body2">
                             <b>Date &amp; Time</b>
                         </MudText>
@@ -121,12 +123,12 @@
                 </MudPaper>
             }
 
-           @*  <MudButton Variant="Variant.Filled"
+            <MudButton Variant="Variant.Filled"
                        Color="Color.Warning"
-                       StartIcon="@Icons.Material.Filled.Print"
-                       OnClick="PrintTickets">
-                Download / Print Tickets
-            </MudButton> *@
+                       StartIcon="@Icons.Material.Filled.Download"
+                       OnClick="DownloadTickets">
+                Download Ticket
+            </MudButton>
 
         </div>
     }
@@ -308,8 +310,32 @@
                Convert.ToBase64String(bytes);
     }
 
-    private async Task PrintTickets()
+    
+
+
+    private async Task DownloadTickets()
     {
-        await JS.InvokeVoidAsync("print");
+        foreach (var ticket in tickets)
+        {
+            var ticketData = new
+            {
+                BookingId = ticket.BookingId,
+                MovieName = ticket.MovieName,
+                Date = ticket.Date.ToString("dd MMM yyyy"),
+                Time = ticket.Time,
+                Cinemas = ticket.Cinemas,
+                Seats = ticket.Seats,
+                TicketId = ticket.Id,
+                QrImage = qrImages[ticket.Id]
+            };
+
+            await JS.InvokeVoidAsync(
+                "downloadTicket",
+                ticketData,
+                $"MovieTicket_{ticket.Id}.html");
+        }
     }
+
+
+
 }
