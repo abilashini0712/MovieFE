@@ -717,7 +717,7 @@ public class BookingResponse
 
     
     private readonly List<string> allSeats = Enumerable
-        .Range(1, 10)
+        .Range(1, 5)
         .SelectMany(row => Enumerable.Range(1, 10)
             .Select(number =>
                 $"{(char)('A' + row - 1)}{number}"))
