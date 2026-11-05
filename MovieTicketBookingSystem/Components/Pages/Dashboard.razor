@@ -1,116 +1,236 @@
-﻿@page "/dashboard"
+﻿
+@page "/dashboard"
+
 @inject NavigationManager Navigation
+
 @using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
 @attribute [Authorize]
 
+<div class="dashboard-page">
 
+    
 
-<div>
-    <MudGrid>
+    <MudGrid Class="admin-sidebar">
 
-        <MudText>ADMIN </MudText>
-       
-        <MudButton onclick="addMovie"> Add Movies </MudButton>
-        <MudButton onclick ="bDetails">Bookings</MudButton>
-        <MudButton onclick = "manageMovie">Manage Movies </MudButton>
-       
+        <MudText>ADMIN</MudText>
+
+        <MudButton OnClick="addMovie">
+            Add Movies
+        </MudButton>
+
+        <MudButton OnClick="bDetails">
+            Bookings
+        </MudButton>
+
+        <MudButton OnClick="manageMovie">
+            Manage Movies
+        </MudButton>
 
     </MudGrid>
 
-    <MudPaper>
-        <MudText> Dashboard </MudText>
-        <MudText> Welcome Back </MudText>
 
-        <MudCard>
+    
 
-            <MudText> Movies </MudText>
-            <MudText>10</MudText>
-
-        </MudCard>
-
-        <MudCard>
-
-            <MudText> Bookings </MudText>
-            <MudText>200</MudText>
-
-        </MudCard>
-
-        <MudCard>
-
-            <MudText> Users </MudText>
-            <MudText>100</MudText>
-
-        </MudCard>
-
-        <MudCard>
-
-            <MudText> Revenue </MudText>
-            <MudText>$50000</MudText>
-
-        </MudCard>
-
-    </MudPaper>
+    <div class="dashboard-content">
 
 
-    <MudPaper>
+      
 
-       
+       <MudPaper Class="dashboard-graph">
 
-        <table border="1">
-            <th>Booking ID</th>
-            <th> User</th>
-            <th>Movie</th>
-            <th> Seats </th>
-            <th> Date </th>
+    <div class="graph-header">
 
-            <tr>
-                <td>0001</td>
-                <td>Abc</td>
-                <td>3bhk</td>
-                <td>1</td>
-                <td>2026-09-16</td>
-            </tr>
+        <MudText Typo="Typo.h6">
+            Revenue Overview
+        </MudText>
 
-            <tr>
-                <td>0002</td>
-                <td>Abc</td>
-                <td>avatar</td>
-                <td>3</td>
-                <td>2026-09-15</td>
-            </tr>
+        <MudText Typo="Typo.caption">
+            Income & Expenses
+        </MudText>
 
-            <tr>
-                <td>0003</td>
-                <td>Abc</td>
-                <td>Jurassic world</td>
-                <td>10</td>
-                <td>2026-09-14</td>
-            </tr>
+    </div>
+
+    <MudChart T="double"
+             ChartType="ChartType.Line"
+             ChartSeries="@RevenueSeries"
+             XAxisLabels="@Months"
+             Width="100%"
+             Height="300px"
+             ChartOptions="@RevenueOptions" />
+
+</MudPaper>
 
 
-        </table>
+
+        
+
+        <MudPaper Class="dashboard-stats">
+
+            <MudText Typo="Typo.h5">
+                Dashboard
+            </MudText>
+
+            <MudText Typo="Typo.body2" Class="welcome-text">
+                Welcome Back
+            </MudText>
 
 
-    </MudPaper>
+            <div class="stats-container">
+
+                <MudCard Class="stat-card movies-card">
+
+                    <MudText>Movies</MudText>
+
+                    <MudText Typo="Typo.h4">
+                        10
+                    </MudText>
+
+                </MudCard>
 
 
-    <MudPaper>
-        <MudText> Top Performing Movies </MudText>
-        <MudList T="string">
-            <MudListItem> Avatar 120 Bookings </MudListItem>
-            <MudListItem> How To Train Your Dragon 95 Bookings </MudListItem>
-            <MudListItem> 3BHK 80 Bookings </MudListItem>
-            <MudListItem> F1 200 Bookings </MudListItem>
-        </MudList>
-    </MudPaper>
+                <MudCard Class="stat-card bookings-card">
+
+                    <MudText>Bookings</MudText>
+
+                    <MudText Typo="Typo.h4">
+                        200
+                    </MudText>
+
+                </MudCard>
 
 
+                <MudCard Class="stat-card users-card">
+
+                    <MudText>Users</MudText>
+
+                    <MudText Typo="Typo.h4">
+                        100
+                    </MudText>
+
+                </MudCard>
+
+
+                <MudCard Class="stat-card revenue-card">
+
+                    <MudText>Revenue</MudText>
+
+                    <MudText Typo="Typo.h4">
+                        $50000
+                    </MudText>
+
+                </MudCard>
+
+            </div>
+
+        </MudPaper>
+
+
+
+
+        <MudPaper Class="dashboard-bookings">
+
+            <MudText Typo="Typo.h6">
+                Recently Booked
+            </MudText>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>User</th>
+                            <th>Movie</th>
+                            <th>Seats</th>
+                            <th>Date</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+                            <td>0001</td>
+                            <td>Abc</td>
+                            <td>3bhk</td>
+                            <td>1</td>
+                            <td>2026-09-16</td>
+                        </tr>
+
+
+                        <tr>
+                            <td>0002</td>
+                            <td>Abc</td>
+                            <td>Avatar</td>
+                            <td>3</td>
+                            <td>2026-09-15</td>
+                        </tr>
+
+
+                        <tr>
+                            <td>0003</td>
+                            <td>Abc</td>
+                            <td>Jurassic world</td>
+                            <td>10</td>
+                            <td>2026-09-14</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </MudPaper>
+
+
+
+
+        <MudPaper Class="dashboard-movies">
+
+            <MudText Typo="Typo.h6">
+                Top Performing Movies
+            </MudText>
+
+
+            <MudList T="string">
+
+                <MudListItem>
+                    Avatar - 120 Bookings
+                </MudListItem>
+
+                <MudListItem>
+                    How To Train Your Dragon - 95 Bookings
+                </MudListItem>
+
+                <MudListItem>
+                    3BHK - 80 Bookings
+                </MudListItem>
+
+                <MudListItem>
+                    F1 - 200 Bookings
+                </MudListItem>
+
+            </MudList>
+
+        </MudPaper>
+
+
+    </div>
 
 </div>
 
+
+
 @code {
 
-
+    
 
     private void addMovie()
     {
@@ -119,273 +239,564 @@
 
     private void bDetails()
     {
-        Navigation.NavigateTo($"/bookingDetails");
+        Navigation.NavigateTo("/bookingDetails");
     }
 
     private void manageMovie()
     {
         Navigation.NavigateTo("/manageMovies");
     }
+
+
+   
+ private string[] Months =
+{
+    "Jan", "Feb", "Mar", "Apr",
+    "May", "Jun", "Jul", "Aug",
+    "Sep", "Oct", "Nov", "Dec"
+};
+
+private List<ChartSeries<double>> RevenueSeries = new()
+{
+    new ChartSeries<double>
+    {
+        Name = "Income",
+        Data = new double[]
+        {
+            25000, 70000, 55000, 75000,
+            45000, 58000, 52000, 68000,
+            50000, 70000, 90000, 100000
+        }
+    },
+
+    new ChartSeries<double>
+    {
+        Name = "Expenses",
+        Data = new double[]
+        {
+            15000, 25000, 22000, 32000,
+            18000, 26000, 28000, 35000,
+            10000, 45000, 20000, 12000,
+        }
+    }
+};
+
+private ChartOptions RevenueOptions = new()
+{
+    ChartPalette = new[]
+    {
+        "#D4A017",
+        "#A66B16"
+    },
+
+    ShowLegend = true
+};
+
+   
+
 }
+
 
 
 <style>
 
-   
+/* =================================
+   MAIN BACKGROUND
+================================= */
 
-    body {
-        margin: 0;
-        background-color: #000000;
+body {
+    margin: 0;
+    background-color: #080808;
+    color: white;
+}
+
+.dashboard-page {
+    min-height: 100vh;
+    background-color: #080808;
+}
+
+
+/* =================================
+   SIDEBAR
+   EXISTING DESIGN PRESERVED
+================================= */
+
+.admin-sidebar {
+    position: absolute;
+    left: 0;
+    top: 100px;
+    width: 220px;
+    min-height: calc(100vh - 100px);
+
+    background-color: #111111;
+
+    border-right: 1px solid #D4A017;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    padding: 25px 15px;
+
+    box-sizing: border-box;
+
+    z-index: 900;
+}
+
+.admin-sidebar .mud-typography {
+    color: #D4A017 !important;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid #333333;
+}
+
+.admin-sidebar .mud-button {
+    width: 100%;
+    height: 48px;
+    min-height: 48px;
+
+    justify-content: flex-start;
+
+    padding-left: 20px;
+    margin-bottom: 8px;
+
+    color: #dddddd !important;
+
+    background-color: transparent !important;
+
+    border-radius: 6px;
+
+    text-transform: none;
+
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.admin-sidebar .mud-button:hover {
+    background-color: #242424 !important;
+
+    color: #D4A017 !important;
+
+    border-left: 3px solid #D4A017;
+}
+
+
+/* =================================
+   DASHBOARD GRID LAYOUT
+================================= */
+
+.dashboard-content {
+
+    margin-left: 220px;
+
+    padding: 20px 25px;
+
+    display: grid;
+
+    grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+
+    gap: 20px;
+
+    align-content: start;
+
+    box-sizing: border-box;
+
+}
+
+
+/* =================================
+   COMMON PAPER DESIGN
+================================= */
+
+.dashboard-content > .mud-paper {
+
+    background-color: #151515 !important;
+
+    color: white !important;
+
+    border: 1px solid #303030;
+
+    border-radius: 18px;
+
+    padding: 22px;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+
+    min-width: 0;
+
+}
+
+
+/* =================================
+   REVENUE GRAPH
+================================= */
+
+.dashboard-graph {
+
+    grid-column: 1;
+    grid-row: 1;
+
+    min-height: 350px;
+
+}
+
+.graph-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+
+}
+
+.graph-header .mud-typography {
+
+    color: #D4A017 !important;
+
+    font-weight: 700;
+
+}
+
+.graph-header .mud-typography-caption {
+
+    color: #aaaaaa !important;
+
+}
+
+
+/* =================================
+   STATISTICS SECTION
+================================= */
+
+.dashboard-stats {
+
+    grid-column: 2;
+    grid-row: 1;
+
+}
+
+.dashboard-stats > .mud-typography {
+
+    color: #D4A017 !important;
+
+    font-weight: 700;
+
+}
+
+.welcome-text {
+
+    color: #aaaaaa !important;
+
+    margin-top: 5px;
+
+}
+
+
+/* STATISTIC CARDS */
+
+.stats-container {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+}
+
+.stats-container .stat-card {
+
+    min-height: 110px;
+
+    padding: 15px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    background-color: #202020 !important;
+
+    border: 1px solid #383838;
+
+    border-radius: 12px;
+
+    color: white !important;
+
+    transition: 0.2s ease;
+
+}
+
+.stats-container .stat-card:hover {
+
+    border-color: #D4A017;
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 5px 18px rgba(212,160,23,0.12);
+
+}
+
+.stat-card .mud-typography:first-child {
+
+    color: #aaaaaa !important;
+
+    font-size: 14px;
+
+}
+
+.stat-card .mud-typography:last-child {
+
+    color: #D4A017 !important;
+
+    font-weight: 700;
+
+}
+
+
+/* INDIVIDUAL CARD ACCENTS */
+
+.movies-card {
+    border-top: 3px solid #D4A017 !important;
+}
+
+.bookings-card {
+    border-top: 3px solid #E5B94B !important;
+}
+
+.users-card {
+    border-top: 3px solid #B58A2A !important;
+}
+
+.revenue-card {
+    border-top: 3px solid #F0C75E !important;
+}
+
+
+/* =================================
+   RECENTLY BOOKED TABLE
+================================= */
+
+.dashboard-bookings {
+
+    grid-column: 1;
+    grid-row: 2;
+
+}
+
+.dashboard-bookings > .mud-typography {
+
+    color: #D4A017 !important;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    margin-bottom: 15px;
+
+}
+
+.table-container {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+}
+
+.dashboard-bookings table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 15px;
+
+    background-color: #191919;
+
+    color: white;
+
+}
+
+.dashboard-bookings table th {
+
+    background-color: #242424;
+
+    color: #D4A017;
+
+    padding: 15px 12px;
+
+    border: 1px solid #383838;
+
+    text-align: left;
+
+    font-weight: 600;
+
+    font-size: 13px;
+
+}
+
+.dashboard-bookings table td {
+
+    padding: 15px 12px;
+
+    border: 1px solid #333333;
+
+    color: #dddddd;
+
+    font-size: 14px;
+
+}
+
+.dashboard-bookings table tr:hover {
+
+    background-color: #292319;
+
+}
+
+
+/* =================================
+   TOP PERFORMING MOVIES
+================================= */
+
+.dashboard-movies {
+
+    grid-column: 2;
+    grid-row: 2;
+
+}
+
+.dashboard-movies > .mud-typography {
+
+    color: #D4A017 !important;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    margin-bottom: 15px;
+
+}
+
+.dashboard-movies .mud-list {
+
+    background-color: transparent !important;
+
+    margin-top: 15px;
+
+}
+
+.dashboard-movies .mud-list-item {
+
+    color: #eeeeee !important;
+
+    border-bottom: 1px solid #333333;
+
+    padding: 17px 10px;
+
+}
+
+.dashboard-movies .mud-list-item:hover {
+
+    background-color: #292319 !important;
+
+    color: #D4A017 !important;
+
+}
+
+
+/* =================================
+   RESPONSIVE DESIGN
+================================= */
+
+@@media (max-width: 1000px) {
+
+    .dashboard-content {
+
+        grid-template-columns: minmax(0, 1fr);
+
+        padding: 20px;
+
     }
 
+    .dashboard-graph,
+    .dashboard-stats,
+    .dashboard-bookings,
+    .dashboard-movies {
 
-    
+        grid-column: 1;
 
-    .mud-grid {
-        position: absolute;
+        grid-row: auto;
+
+    }
+
+}
+
+
+@@media (max-width: 650px) {
+
+    .admin-sidebar {
+
+        position: relative;
+
+        top: 0;
         left: 0;
-        top: 100px;
-        width: 220px;
-        min-height: calc(100vh - 100px);
-        background-color: #111111;
-        border-right: 1px solid #D4A017;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        padding: 25px 15px;
-        box-sizing: border-box;
-        z-index: 900;
+
+        width: 100%;
+
+        min-height: auto;
+
+        border-right: none;
+
+        border-bottom: 1px solid #D4A017;
+
     }
 
+    .dashboard-content {
 
-      
+        margin-left: 0;
 
-        .mud-grid .mud-typography {
-            color: #D4A017 !important;
-            font-size: 22px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #333333;
-        }
+        padding: 15px;
 
+        grid-template-columns: 1fr;
 
-        
-
-        .mud-grid .mud-button {
-            width: 100%;
-            height: 48px;
-            min-height: 48px;
-            justify-content: flex-start;
-            padding-left: 20px;
-            margin-bottom: 8px;
-            color: #dddddd !important;
-            background-color: transparent !important;
-            border-radius: 6px;
-            text-transform: none;
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-
-
-            .mud-grid .mud-button:hover {
-                background-color: #242424 !important;
-                color: #D4A017 !important;
-                border-left: 3px solid #D4A017;
-            }
-
-
-       
-
-        .mud-grid ~ .mud-paper {
-            margin-left: 240px;
-            margin-right: 25px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            padding: 25px;
-            background-color: #111111 !important;
-            color: white !important;
-            border: 1px solid #2d2d2d;
-            border-radius: 10px;
-            box-sizing: border-box;
-        }
-
-
-            
-
-            .mud-grid ~ .mud-paper .mud-typography {
-                color: #D4A017 !important;
-                font-size: 18px;
-                font-weight: 500;
-            }
-
-
-
-            .mud-grid ~ .mud-paper .mud-card {
-                display: inline-flex;
-                vertical-align: top;
-                width: calc(25% - 15px);
-                min-height: 110px;
-                margin-top: 20px;
-                margin-right: 15px;
-                padding: 20px;
-                box-sizing: border-box;
-                background-color: #1a1a1a !important;
-                border: 1px solid #333333;
-                border-radius: 8px;
-                color: white !important;
-                align-items: center;
-                justify-content: center;
-                transition: 0.2s ease;
-            }
-
-
-               
-
-                .mud-grid ~ .mud-paper .mud-card:last-child {
-                    margin-right: 0;
-                }
-
-
-               
-
-                .mud-grid ~ .mud-paper .mud-card:hover {
-                    border-color: #D4A017;
-                    transform: translateY(-3px);
-                    box-shadow: 0 5px 20px rgba(212, 160, 23, 0.12);
-                }
-
-
-               
-
-                .mud-grid ~ .mud-paper .mud-card .mud-typography {
-                    color: #D4A017 !important;
-                    font-size: 18px;
-                    font-weight: 500;
-                    text-align: center;
-                }
-
-
-            
-
-            .mud-grid ~ .mud-paper table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 15px;
-                background-color: #151515;
-                color: white;
-            }
-
-
-               
-
-                .mud-grid ~ .mud-paper table th {
-                    background-color: #1d1d1d;
-                    color: #D4A017;
-                    padding: 14px;
-                    border: 1px solid #333333;
-                    text-align: left;
-                    font-weight: 600;
-                }
-
-
-               
-
-                .mud-grid ~ .mud-paper table td {
-                    padding: 14px;
-                    border: 1px solid #333333;
-                    color: #dddddd;
-                }
-
-
-               
-
-                .mud-grid ~ .mud-paper table tr:hover {
-                    background-color: #222222;
-                }
-
-
-            
-
-            .mud-grid ~ .mud-paper .mud-list {
-                background-color: transparent !important;
-                margin-top: 15px;
-            }
-
-
-            .mud-grid ~ .mud-paper .mud-list-item {
-                color: #dddddd !important;
-                border-bottom: 1px solid #333333;
-                padding: 15px 10px;
-            }
-
-
-               
-
-                .mud-grid ~ .mud-paper .mud-list-item:hover {
-                    background-color: #222222 !important;
-                    color: #D4A017 !important;
-                }
-
-
-   
-
-    @@media (max-width: 1000px) {
-
-        .mud-grid {
-            width: 190px;
-        }
-
-
-            .mud-grid ~ .mud-paper {
-                margin-left: 205px;
-                margin-right: 15px;
-            }
-
-
-                .mud-grid ~ .mud-paper .mud-card {
-                    width: calc(50% - 10px);
-                    margin-right: 10px;
-                }
     }
 
+    .dashboard-content > .mud-paper {
 
-   
+        padding: 15px;
 
-    @@media (max-width: 650px) {
+        border-radius: 12px;
 
-        .mud-grid {
-            position: relative;
-            top: 0;
-            left: 0;
-            width: 100%;
-            min-height: auto;
-            border-right: none;
-            border-bottom: 1px solid #D4A017;
-            padding: 20px 15px;
-        }
-
-
-            .mud-grid ~ .mud-paper {
-                margin-left: 10px;
-                margin-right: 10px;
-                margin-top: 15px;
-                padding: 15px;
-            }
-
-
-                .mud-grid ~ .mud-paper .mud-card {
-                    width: 100%;
-                    margin-right: 0;
-                    margin-top: 10px;
-                }
-
-
-                .mud-grid ~ .mud-paper table {
-                    font-size: 13px;
-                }
     }
+
+    .stats-container {
+
+        grid-template-columns: 1fr 1fr;
+
+    }
+
+    .dashboard-bookings table {
+
+        min-width: 550px;
+
+    }
+
+}
 
 </style>
