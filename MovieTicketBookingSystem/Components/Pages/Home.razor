@@ -1,56 +1,85 @@
-﻿@page "/"
+﻿
+@page "/"
+@implements IDisposable
 
 <MudContainer Class="page-wrapper" MaxWidth="MaxWidth.False">
 
-    <MudStack Row="true" Class="hero-card" AlignItems="AlignItems.Start" Spacing="0">
+    @if (CurrentMovie != null)
+    {
+        <MudStack Row="true" Class="hero-card"
+                  AlignItems="AlignItems.Start" Spacing="0">
 
-        <MudImage Src="images/dragon.jpg" Class="movie" ObjectFit="ObjectFit.Cover" />
+            <div class="movie-image">
+                <MudImage Src="@CurrentMovie.Poster"
+                          Class="movie"
+                          ObjectFit="ObjectFit.Cover" />
+            </div>
 
-        <MudStack Class="details" Spacing="0">
+            <MudStack Class="details" Spacing="0">
 
-            <MudText Typo="Typo.h1" Class="movie-title">How to Train Your Dragon</MudText>
-
-            <MudPaper Class="movie-desc" Elevation="0">
-                <MudText>
-                    On the rugged isle of Berk, where Vikings and dragons have been bitter enemies for generations,
-                    Hiccup stands apart, defying centuries of tradition when he befriends Toothless, a feared Night
-                    Fury dragon. Their unlikely bond reveals the true nature of dragons, challenging the very
-                    foundations of Viking society.
+                <MudText Typo="Typo.h1" Class="movie-title">
+                    @CurrentMovie.Title
                 </MudText>
-            </MudPaper>
 
-            <MudPaper Class="line" Elevation="0">
-                <MudText>Now showing at CINE WORLD MULTIPLEX - C2</MudText>
-            </MudPaper>
+                <MudPaper Class="movie-desc" Elevation="0">
+                    <MudText>
+                        @CurrentMovie.Description
+                    </MudText>
+                </MudPaper>
+
+                <MudPaper Class="line" Elevation="0">
+                    <MudText>
+                        @CurrentMovie.Cinema
+                    </MudText>
+                </MudPaper>
+
+            </MudStack>
 
         </MudStack>
-
-    </MudStack>
+    }
 
 </MudContainer>
 
 
 <MudContainer Class="now-showing-wrapper" MaxWidth="MaxWidth.False">
+
     <MudPaper Class="section-header" Elevation="0">
-        <MudText Typo="Typo.h5" Class="section-title">Now Showing</MudText>
+        <MudText Typo="Typo.h5" Class="section-title">
+            Now Showing
+        </MudText>
     </MudPaper>
 
     <div class="movie-grid">
+
         @foreach (var movie in Movies)
         {
             <MudPaper Class="grid-card" Elevation="0">
-                <MudImage Src="@movie.Poster" Class="poster" ObjectFit="ObjectFit.Cover" />
+
+                <MudImage Src="@movie.Poster"
+                          Class="poster"
+                          ObjectFit="ObjectFit.Cover" />
+
                 <div class="movie-info">
-                    <MudText Class="movie-name">@movie.Title</MudText>
-                    <MudText Class="movie-meta">@movie.Year &bull; @movie.Duration</MudText>
+                    <MudText Class="movie-name">
+                        @movie.Title
+                    </MudText>
+
+                    <MudText Class="movie-meta">
+                        @movie.Year &bull; @movie.Duration
+                    </MudText>
                 </div>
+
             </MudPaper>
         }
+
     </div>
+
 </MudContainer>
 
 
 <style>
+
+    /* HERO SECTION */
 
     .page-wrapper {
         display: flex;
@@ -58,20 +87,43 @@
         align-items: center;
         min-height: 90vh;
         background-color: black;
+        overflow: hidden;
     }
 
     .hero-card {
         gap: 50px;
         padding: 60px;
+        width: 100%;
+        max-width: 1100px;
+    }
+
+    /* MOVIE POSTER ANIMATION */
+
+    .movie-image {
+        flex-shrink: 0;
+        animation: posterAnimation 1s ease;
     }
 
     .movie {
         width: 250px;
         height: 400px;
         box-shadow: 0 0 15px goldenrod;
-        flex-shrink: 0;
         border-radius: 4px;
     }
+
+    @@keyframes posterAnimation {
+        from {
+            opacity: 0;
+            transform: translateX(-80px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* MOVIE DETAILS ANIMATION */
 
     .details {
         gap: 20px;
@@ -80,6 +132,20 @@
         font-family: 'Times New Roman', Times, serif;
         margin-top: 40px;
         margin-left: 40px;
+
+        animation: detailsAnimation 1s ease;
+    }
+
+    @@keyframes detailsAnimation {
+        from {
+            opacity: 0;
+            transform: translateX(80px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 
     .movie-title {
@@ -107,6 +173,7 @@
         font-weight: bold;
     }
 
+    /* NOW SHOWING SECTION */
 
     .now-showing-wrapper {
         background-color: black;
@@ -129,18 +196,6 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 30px;
-    }
-
-    @@media (max-width: 900px) {
-        .movie-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @@media (max-width: 500px) {
-        .movie-grid {
-            grid-template-columns: 1fr;
-        }
     }
 
     .grid-card {
@@ -171,15 +226,119 @@
         font-size: 0.85rem;
         margin-top: 4px;
     }
+
+    @@media (max-width: 900px) {
+        .movie-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .hero-card {
+            gap: 25px;
+            padding: 30px;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .hero-card {
+            flex-direction: column;
+            align-items: center !important;
+        }
+
+        .details {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .movie {
+            width: 220px;
+            height: 330px;
+        }
+
+        .now-showing-wrapper {
+            padding: 20px;
+        }
+
+        .movie-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
 </style>
 
+
 @code {
+
+    private int CurrentIndex = 0;
+
+    private Movie? CurrentMovie =>
+        Movies.Count > 0 ? Movies[CurrentIndex] : null;
+
+    private System.Threading.Timer? movieTimer;
+
+    protected override void OnInitialized()
+    {
+        movieTimer = new System.Threading.Timer(
+            async _ =>
+            {
+                await InvokeAsync(() =>
+                {
+                    CurrentIndex = (CurrentIndex + 1) % Movies.Count;
+
+                    StateHasChanged();
+                });
+            },
+            null,
+            TimeSpan.FromSeconds(5),
+            TimeSpan.FromSeconds(5)
+        );
+    }
+
+    public void Dispose()
+    {
+        movieTimer?.Dispose();
+    }
+
     private List<Movie> Movies = new()
     {
-        new Movie { Title = "3BHK", Poster = "images/3bhk.jpg", Year = "2025", Duration = "2h 5m" },
-        new Movie { Title = "Avatar Fire And ASH", Poster = "images/avatar.jpg", Year = "2025", Duration = "2h 5m" },
-        new Movie { Title = "How to Train Your Dragon", Poster = "images/dragon.jpg", Year = "2025", Duration = "2h 5m" },
-        new Movie { Title = "F1", Poster = "images/f1.jpg", Year = "2025", Duration = "2h 5m" },
+        new Movie
+        {
+            Title = "How to Train Your Dragon",
+            Poster = "images/dragon.jpg",
+            Year = "2025",
+            Duration = "2h 5m",
+            Cinema = "Now showing at CINE WORLD MULTIPLEX - C2",
+            Description = "On the rugged isle of Berk, where Vikings and dragons have been bitter enemies for generations, Hiccup stands apart, defying centuries of tradition when he befriends Toothless, a feared Night Fury dragon. Their unlikely bond reveals the true nature of dragons, challenging the very foundations of Viking society."
+        },
+
+        new Movie
+        {
+            Title = "Avatar Fire And ASH",
+            Poster = "images/avatar.jpg",
+            Year = "2025",
+            Duration = "2h 5m",
+            Cinema = "Now showing at CINE WORLD MULTIPLEX - C1",
+            Description = "On the distant moon of Pandora, where nature and culture exist in harmony, a new threat rises from the depths of fire and ash. As ancient forces awaken, the Na'vi must confront powerful enemies and internal conflicts, testing their unity and their connection to the living world."
+        },
+
+        new Movie
+        {
+            Title = "3BHK",
+            Poster = "images/3bhk.jpg",
+            Year = "2025",
+            Duration = "2h 5m",
+            Cinema = "Now showing at CINE WORLD MULTIPLEX - C3",
+            Description = "In a quiet apartment complex, where middle-class life unfolds behind closed doors, a young family faces emotional struggles that test love, trust, and patience. As personal conflicts rise within their 3BHK home, hidden truths surface, revealing the fragile balance between dreams, responsibilities, and relationships."
+        },
+
+        new Movie
+        {
+            Title = "F1",
+            Poster = "images/f1.jpg",
+            Year = "2025",
+            Duration = "2h 5m",
+            Cinema = "Now showing at CINE WORLD MULTIPLEX - C2",
+            Description = "Experience the excitement of Formula racing as drivers compete at incredible speeds, facing challenges and rivalries on the track."
+        }
     };
 
     private class Movie
@@ -188,6 +347,8 @@
         public string Poster { get; set; } = "";
         public string Year { get; set; } = "";
         public string Duration { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Cinema { get; set; } = "";
     }
-}
 
+}
