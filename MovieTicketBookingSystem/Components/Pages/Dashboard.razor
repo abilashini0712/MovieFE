@@ -5,6 +5,10 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
+@using MovieTicketBookingSystem.Models
+
+@using System.Net.Http.Json
+@inject HttpClient Http
 
 @attribute [Authorize]
 
@@ -84,7 +88,7 @@
                     <MudText>Movies</MudText>
 
                     <MudText Typo="Typo.h4">
-                        10
+                        @dashboard.TotalMovies
                     </MudText>
 
                 </MudCard>
@@ -95,7 +99,7 @@
                     <MudText>Bookings</MudText>
 
                     <MudText Typo="Typo.h4">
-                        200
+                        @dashboard.TotalBookings
                     </MudText>
 
                 </MudCard>
@@ -106,7 +110,7 @@
                     <MudText>Users</MudText>
 
                     <MudText Typo="Typo.h4">
-                        100
+                        @dashboard.TotalUsers
                     </MudText>
 
                 </MudCard>
@@ -117,7 +121,7 @@
                     <MudText>Revenue</MudText>
 
                     <MudText Typo="Typo.h4">
-                        $50000
+                        @dashboard.TotalRevenue.ToString("C")
                     </MudText>
 
                 </MudCard>
@@ -150,10 +154,36 @@
                             <th>Date</th>
                         </tr>
 
-                    </thead>
+                    </thead> 
 
 
-                    <tbody>
+
+                    
+<tbody>
+    @if (dashboard.RecentBookings.Any())
+    {
+        @foreach (var booking in dashboard.RecentBookings)
+        {
+            <tr>
+                <td>@booking.BookingId</td>
+                <td>@booking.User</td>
+                <td>@booking.MovieName</td>
+                <td>@booking.Seats</td>
+                <td>@booking.Date.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="5">No bookings available</td>
+        </tr>
+    }
+</tbody>
+
+
+
+                    @* <tbody>
 
                         <tr>
                             <td>0001</td>
@@ -181,7 +211,7 @@
                             <td>2026-09-14</td>
                         </tr>
 
-                    </tbody>
+                    </tbody> *@
 
                 </table>
 
@@ -199,7 +229,21 @@
             </MudText>
 
 
-            <MudList T="string">
+            
+<MudList T="string">
+
+    @foreach (var movie in dashboard.TopMovies)
+    {
+        <MudListItem>
+            @movie.MovieName - @movie.BookingCount Bookings
+        </MudListItem>
+    }
+
+</MudList>
+
+
+
+           @*  <MudList T="string">
 
                 <MudListItem>
                     Avatar - 120 Bookings
@@ -217,7 +261,7 @@
                     F1 - 200 Bookings
                 </MudListItem>
 
-            </MudList>
+            </MudList> *@
 
         </MudPaper>
 
@@ -293,6 +337,57 @@ private ChartOptions RevenueOptions = new()
 };
 
    
+
+private DashboardDto dashboard = new();
+
+private bool isLoading = true;
+
+private string errorMessage = "";
+
+protected override async Task OnInitializedAsync()
+{
+    await LoadDashboard();
+}
+
+private async Task LoadDashboard()
+{
+    try
+    {
+        isLoading = true;
+
+        dashboard = await Http.GetFromJsonAsync<DashboardDto>(
+            "https://localhost:7218/api/Dashboard/summary"
+        ) ?? new DashboardDto();
+
+      
+        RevenueSeries = new()
+        {
+            new ChartSeries<double>
+            {
+                Name = "Income",
+                Data = dashboard.MonthlyIncome.ToArray()
+            },
+
+            new ChartSeries<double>
+            {
+                Name = "Expenses",
+                Data = dashboard.MonthlyExpenses.ToArray()
+            }
+        };
+    }
+    catch (Exception ex)
+    {
+        errorMessage = "Unable to load dashboard: " + ex.Message;
+    }
+    finally
+    {
+        isLoading = false;
+    }
+}
+
+
+
+
 
 }
 

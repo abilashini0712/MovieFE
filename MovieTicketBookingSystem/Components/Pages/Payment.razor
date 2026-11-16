@@ -8,30 +8,71 @@
 
 @attribute [Authorize]
 
-<MudPaper Class="payment-card" Elevation="4">
-    <MudText Typo="Typo.h5" Class="payment-title">
-        Secure Payment
-    </MudText>
 
-    <MudText Class="payment-field">
-        Your card details will be entered securely
-        on Stripe Checkout.
-    </MudText>
 
-    <MudButton OnClick="Pay"
-               Disabled="@isLoading"
-               FullWidth="true"
-               Class="pay-btn">
-        @(isLoading ? "Redirecting..." : "Pay with Stripe")
-    </MudButton>
+<div class="payment-wrapper">
 
-    @if (!string.IsNullOrWhiteSpace(errorMessage))
-    {
-        <MudAlert Severity="Severity.Error" Class="mt-4">
-            @errorMessage
-        </MudAlert>
-    }
-</MudPaper>
+    <MudPaper Class="payment-card" Elevation="8">
+
+        <div class="payment-icon">
+            <MudIcon Icon="@Icons.Material.Filled.Lock"
+                     Size="Size.Large" />
+        </div>
+
+        <MudText Typo="Typo.h5" Class="payment-title">
+            Secure Payment
+        </MudText>
+
+        <MudText Class="payment-subtitle">
+            Complete your booking with confidence.
+        </MudText>
+
+        <MudDivider Class="payment-divider" />
+
+        <div class="payment-info">
+            <MudIcon Icon="@Icons.Material.Filled.Security"
+                     Class="security-icon" />
+
+            <MudText Class="payment-description">
+                Your card details will be entered securely
+                on Stripe Checkout. Your payment information
+                is protected.
+            </MudText>
+        </div>
+
+        <MudButton OnClick="Pay"
+                   Disabled="@isLoading"
+                   FullWidth="true"
+                   Class="pay-btn"
+                   Variant="Variant.Filled">
+
+            <MudIcon Icon="@Icons.Material.Filled.Payment"
+                     Class="mr-2" />
+
+            @(isLoading ? "Redirecting..." : "Pay with Stripe")
+
+        </MudButton>
+
+        <div class="payment-footer">
+            <MudIcon Icon="@Icons.Material.Filled.VerifiedUser"
+                     Size="Size.Small" />
+
+            <MudText Class="footer-text">
+                Secure checkout powered by Stripe
+            </MudText>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-4">
+                @errorMessage
+            </MudAlert>
+        }
+
+    </MudPaper>
+
+</div>
+
 
 @code {
     [Parameter]
@@ -97,101 +138,172 @@
 }
 
 <style>
-    .login-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 90vh;
-        background-color: #000000;
-        padding: 20px;
+   
+.payment-wrapper {
+    min-height: calc(100vh - 180px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 20px;
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(212, 160, 23, 0.09) 0%,
+            #080808 55%,
+            #000000 100%
+        );
+}
+
+/* Payment Card */
+.payment-card {
+    width: 100%;
+    max-width: 460px;
+    padding: 40px 38px;
+    background: linear-gradient(
+        145deg,
+        #191919,
+        #101010
+    ) !important;
+    border: 1px solid rgba(212, 160, 23, 0.7);
+    border-radius: 16px;
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.7),
+        0 0 25px rgba(212, 160, 23, 0.12);
+    text-align: center;
+}
+
+/* Lock Icon */
+.payment-icon {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(212, 160, 23, 0.12);
+    border: 1px solid rgba(212, 160, 23, 0.4);
+    border-radius: 50%;
+    color: #D4A017;
+}
+
+/* Heading */
+.payment-title {
+    color: #D4A017;
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+/* Subtitle */
+.payment-subtitle {
+    color: #bdbdbd;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+}
+
+/* Divider */
+.payment-divider {
+    background-color: rgba(212, 160, 23, 0.3);
+    margin-bottom: 25px;
+}
+
+/* Payment Information */
+.payment-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    text-align: left;
+    padding: 18px;
+    margin-bottom: 25px;
+    background-color: rgba(255, 255, 255, 0.035);
+    border: 1px solid #333;
+    border-radius: 10px;
+}
+
+.security-icon {
+    color: #D4A017;
+    font-size: 25px;
+    margin-top: 2px;
+}
+
+.payment-description {
+    color: #c4c4c4;
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+/* Pay Button */
+.pay-btn {
+    min-height: 50px;
+    background: linear-gradient(
+        90deg,
+        #D4A017,
+        #F2C94C
+    ) !important;
+    color: #000 !important;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(212, 160, 23, 0.2);
+    transition: all 0.25s ease;
+}
+
+.pay-btn:hover {
+    background: #f5c542 !important;
+    box-shadow: 0 7px 22px rgba(212, 160, 23, 0.4);
+    transform: translateY(-2px);
+}
+
+.pay-btn:disabled {
+    opacity: 0.6;
+}
+
+/* Secure Footer */
+.payment-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+    color: #D4A017;
+}
+
+.footer-text {
+    color: #999;
+    font-size: 0.8rem;
+}
+
+/* Responsive */
+@@media (max-width: 600px) {
+    .payment-wrapper {
+        min-height: calc(100vh - 150px);
+        padding: 30px 15px;
     }
 
     .payment-card {
-        width: 100%;
-        max-width: 420px;
-        background-color: #121212 !important;
-        border: 1px solid #D4A017;
-        border-radius: 10px;
-        padding: 40px 30px;
-        box-shadow: 0 0 20px rgba(212, 160, 23, 0.15);
+        padding: 30px 22px;
+        max-width: 100%;
     }
 
     .payment-title {
-        color: #D4A017;
-        font-size: 1.6rem;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 30px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        font-size: 1.4rem;
+    }
+}
+
+@@media (max-width: 400px) {
+    .payment-card {
+        padding: 25px 18px;
     }
 
-    .payment-field {
-        margin-bottom: 22px;
+    .payment-icon {
+        width: 55px;
+        height: 55px;
     }
+}
 
-        .payment-field .mud-input-label {
-            color: #d9d9d9 !important;
-        }
-
-        .payment-field .mud-input-slot {
-            color: #ffffff !important;
-        }
-
-        .payment-field .mud-input:before,
-        .payment-field .mud-input:after {
-            border-color: #D4A017 !important;
-        }
-
-        .payment-field .mud-input-outlined-border {
-            border-color: #555555 !important;
-        }
-
-        .payment-field:hover .mud-input-outlined-border {
-            border-color: #D4A017 !important;
-        }
-
-        .payment-field.mud-input-focused .mud-input-outlined-border {
-            border-color: #D4A017 !important;
-        }
-
-    .pay-btn {
-        background-color: #D4A017 !important;
-        color: #000000 !important;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        margin-top: 10px;
-        border-radius: 6px;
-        transition: background-color 0.2s ease, transform 0.15s ease;
-    }
-
-        .pay-btn:hover {
-            background-color: #b8890f !important;
-            transform: translateY(-1px);
-        }
-
-
-
-    @@media (max-width: 600px) {
-        .payment-card {
-            padding: 30px 20px;
-            max-width: 100%;
-        }
-
-        .payment-title {
-            font-size: 1.3rem;
-        }
-    }
-
-    @@media (max-width: 400px) {
-        .login-wrapper {
-            padding: 10px;
-        }
-
-        .payment-card {
-            border-radius: 6px;
-        }
-    }
 </style>
 
 @* @code {
