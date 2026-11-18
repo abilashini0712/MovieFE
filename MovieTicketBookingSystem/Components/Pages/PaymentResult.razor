@@ -32,7 +32,7 @@
     }
 </MudPaper>
 
-@code {
+    @code {
     [SupplyParameterFromQuery(Name = "session_id")]
     public string? SessionId { get; set; }
 
@@ -59,8 +59,21 @@
                 return;
             }
 
-            var result = await Http.GetFromJsonAsync<PaymentStatusResponse>(
-                $"https://localhost:7218/api/Payment/status/{Uri.EscapeDataString(SessionId)}");
+            // var result = await Http.GetFromJsonAsync<PaymentStatusResponse>(
+            //     $"https://localhost:7218/api/Payment/status/{Uri.EscapeDataString(SessionId)}");
+
+            var response = await Http.PostAsync(
+    $"https://localhost:7218/api/Payment/confirm-session/{Uri.EscapeDataString(SessionId)}",
+    null);
+
+if (!response.IsSuccessStatusCode)
+{
+    message = "Unable to verify payment. Please try again.";
+    return;
+}
+
+var result = await response.Content
+    .ReadFromJsonAsync<PaymentStatusResponse>();
 
             if (result == null)
             {
@@ -80,6 +93,7 @@
             else
             {
                 message = "Payment is still being confirmed. Please check again shortly.";
+                
             }
         }
         catch (HttpRequestException)
@@ -96,5 +110,8 @@
     {
         public string status { get; set; } = string.Empty;
         public int bookingId { get; set; }
+        
     }
+
+     
 }
