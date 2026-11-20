@@ -9,7 +9,7 @@
             <MudText Class="title">@title</MudText>
             <MudText Class="gener">@gener</MudText>
             <MudText Class="duration">@duration</MudText>
-            <MudButton @onclick="buy" Class="buy-ticket">Buy Now</MudButton>
+            <MudButton onclick="buy" Class="buy-ticket">Buy Now</MudButton>
 
            
             @if (IsAdmin)
@@ -144,6 +144,10 @@
         Navigation.NavigateTo(
             $"/register?movieName={Uri.EscapeDataString(title ?? string.Empty)}");
     }
+
+  
+
+
 
     
     [Parameter] public string image { get; set; } = string.Empty;

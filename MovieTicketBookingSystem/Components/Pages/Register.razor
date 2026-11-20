@@ -166,6 +166,10 @@
     [SupplyParameterFromQuery(Name = "movieName")]
 public string MovieName { get; set; } = string.Empty;
 
+ [SupplyParameterFromQuery(Name = "movieImage")]
+public string MovieImage { get; set; } = string.Empty;
+
+
 
     private async Task clickRegister()
     {
@@ -191,8 +195,12 @@ public string MovieName { get; set; } = string.Empty;
 
             if (response.IsSuccessStatusCode)
             {
-               Navigation.NavigateTo(
-    $"/login?movieName={Uri.EscapeDataString(MovieName ?? string.Empty)}");
+                Navigation.NavigateTo(
+     $"/login?movieName={Uri.EscapeDataString(MovieName ?? string.Empty)}");
+            
+//               Navigation.NavigateTo(
+//     $"/login?movieName={Uri.EscapeDataString(MovieName ?? string.Empty)}&movieImage={Uri.EscapeDataString(MovieImage ?? string.Empty)}"
+// );
             }
             else
             {

@@ -478,7 +478,7 @@ public class BookingResponse
 
 @attribute [Authorize]
 
-<div class="login-wrapper">
+@* <div class="login-wrapper">
     <MudPaper Class="booking-card">
 
         <MudForm @ref="form" @bind-IsValid="isValid">
@@ -690,7 +690,364 @@ public class BookingResponse
         </MudForm>
 
     </MudPaper>
+</div> *@
+
+
+
+<div class="booking-page">
+
+    <MudPaper Class="booking-dashboard" Elevation="0">
+
+        <MudForm @ref="form" @bind-IsValid="isValid">
+
+            <div class="booking-header">
+                <MudText Class="brand-title">CINEMATIX</MudText>
+                <MudText Class="header-subtitle">MOVIE TICKET BOOKING</MudText>
+            </div>
+
+            <div class="booking-layout">
+
+                @* LEFT SIDE - MOVIE AND BOOKING DETAILS *@
+
+                <div class="movie-booking-panel">
+
+                    <MudText Class="panel-heading">
+                        Movie Details
+                    </MudText>
+
+                    <div class="movie-information">
+
+                        @if (!string.IsNullOrWhiteSpace(MovieImage))
+                        {
+                            <MudImage Src="@MovieImage"
+                                      Class="booking-movie-poster"
+                                      ObjectFit="ObjectFit.Cover" />
+                        }
+                        else
+                        {
+                            <div class="poster-placeholder">
+                                <MudIcon Icon="@Icons.Material.Filled.Movie"
+                                         Size="Size.Large" />
+                                No Poster
+                            </div>
+                        }
+
+                        <div class="movie-information-details">
+
+                            <MudText Class="booking-movie-title">
+                                @MovieName
+                            </MudText>
+
+                            <MudText Class="movie-subtitle">
+                                Select your preferred show and seats
+                            </MudText>
+
+                            <MudText Class="movie-rating">
+                                <MudIcon Icon="@Icons.Material.Filled.LocalMovies"
+                                         Size="Size.Small" />
+                                Cinema Experience
+                            </MudText>
+
+                        </div>
+
+                    </div>
+
+                    <MudDivider Class="booking-divider" />
+
+                    @* DATE *@
+
+                    <MudText Class="section-label">
+                        <MudIcon Icon="@Icons.Material.Filled.CalendarMonth"
+                                 Size="Size.Small" />
+                        Select Date
+                    </MudText>
+
+                    <div class="booking-input">
+                        <MudDatePicker Label="Booking Date"
+                                       Date="@Date"
+                                       DateChanged="@OnDateChanged"
+                                       Variant="Variant.Outlined"
+                                       Required="true"
+                                       MinDate="@DateTime.Today" />
+                    </div>
+
+                    @* TIME *@
+
+                    <MudText Class="section-label">
+                        <MudIcon Icon="@Icons.Material.Filled.AccessTime"
+                                 Size="Size.Small" />
+                        Select Showtime
+                    </MudText>
+
+                    <div class="time-options">
+
+                        <MudButton Class="@GetTimeClass("morning")"
+                                   OnClick="@(() => OnTimeChanged("morning"))">
+                            10:30 AM
+                        </MudButton>
+
+                        <MudButton Class="@GetTimeClass("afternoon")"
+                                   OnClick="@(() => OnTimeChanged("afternoon"))">
+                            02:00 PM
+                        </MudButton>
+
+                        <MudButton Class="@GetTimeClass("evening")"
+                                   OnClick="@(() => OnTimeChanged("evening"))">
+                            06:30 PM
+                        </MudButton>
+
+                        <MudButton Class="@GetTimeClass("night")"
+                                   OnClick="@(() => OnTimeChanged("night"))">
+                            09:30 PM
+                        </MudButton>
+
+                    </div>
+
+                    @* CINEMA *@
+
+                    <MudText Class="section-label">
+                        <MudIcon Icon="@Icons.Material.Filled.LocationOn"
+                                 Size="Size.Small" />
+                        Select Cinema
+                    </MudText>
+
+                    <div class="booking-input">
+
+                        <MudSelect T="string"
+                                   Label="Cinema"
+                                   Value="@cinemas"
+                                   ValueChanged="@OnCinemaChanged"
+                                   Variant="Variant.Outlined"
+                                   Required="true">
+
+                            <MudSelectItem T="string" Value="@("C1")">
+                                Cinema C1
+                            </MudSelectItem>
+
+                            <MudSelectItem T="string" Value="@("C2")">
+                                Cinema C2
+                            </MudSelectItem>
+
+                            <MudSelectItem T="string" Value="@("C3")">
+                                Cinema C3
+                            </MudSelectItem>
+
+                        </MudSelect>
+
+                    </div>
+
+                    @* NUMBER OF TICKETS *@
+
+                    <MudText Class="section-label">
+                        Number of Tickets
+                    </MudText>
+
+                    <div class="booking-input">
+
+                        <MudNumericField T="int"
+                                         Label="Tickets"
+                                         @bind-Value="Tickets"
+                                         Min="1"
+                                         Max="30"
+                                         Variant="Variant.Outlined"
+                                         Required="true" />
+
+                    </div>
+
+                    <MudDivider Class="booking-divider" />
+
+                    @* SELECTED SEATS *@
+
+                    <MudText Class="section-label">
+                        <MudIcon Icon="@Icons.Material.Filled.EventSeat"
+                                 Size="Size.Small" />
+                        Selected Seats
+                    </MudText>
+
+                    <div class="selected-seats">
+
+                        @if (selectedSeats.Count == 0)
+                        {
+                            <MudText Class="empty-seats">
+                                No seats selected yet
+                            </MudText>
+                        }
+                        else
+                        {
+                            @foreach (var seat in selectedSeats.OrderBy(s => s))
+                            {
+                                <span class="selected-seat-chip">
+                                    @seat
+                                </span>
+                            }
+                        }
+
+                    </div>
+
+                    <div class="booking-summary">
+
+                        <div class="summary-row">
+                            <span>Selected Tickets</span>
+                            <strong>@selectedSeats.Count</strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Movie</span>
+                            <strong>@MovieName</strong>
+                        </div>
+
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(errorMessage))
+                    {
+                        <MudAlert Severity="Severity.Error" Class="mt-3">
+                            @errorMessage
+                        </MudAlert>
+                    }
+
+                    <MudButton OnClick="Payment"
+                               Class="pay-btn"
+                               FullWidth="true"
+                               Disabled="@(isProcessing ||
+                                   isLoadingSeats ||
+                                   !availabilityLoaded)">
+
+                        @if (isProcessing)
+                        {
+                            <MudProgressCircular Indeterminate="true"
+                                                 Size="Size.Small"
+                                                 Class="mr-2" />
+                        }
+                        else
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Payment"
+                                     Class="mr-2" />
+                            <span>Proceed To Payment</span>
+                        }
+
+                    </MudButton>
+
+                </div>
+
+
+                @* RIGHT SIDE - SEAT SELECTION *@
+
+                <div class="seat-booking-panel">
+
+                    <MudText Class="panel-heading">
+                        Select Your Seats
+                    </MudText>
+
+                    <div class="screen-container">
+                        <div class="screen-curve"></div>
+                        <MudText Class="screen-text">SCREEN</MudText>
+                    </div>
+
+                    @if (isLoadingSeats)
+                    {
+                        <div class="seat-message">
+
+                            <MudProgressCircular Indeterminate="true"
+                                                 Color="Color.Info" />
+
+                            <MudText>Loading seat availability...</MudText>
+
+                        </div>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(seatError))
+                    {
+                        <MudAlert Severity="Severity.Error">
+                            @seatError
+                        </MudAlert>
+                    }
+                    else if (!availabilityLoaded)
+                    {
+                        <div class="seat-message">
+                            <MudIcon Icon="@Icons.Material.Filled.EventSeat"
+                                     Size="Size.Large" />
+
+                            <MudText>
+                                Select a date, time and cinema to view available seats.
+                            </MudText>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="seat-map">
+
+                            @foreach (var row in allSeats.GroupBy(s => s[0]))
+                            {
+                                <div class="seat-row">
+
+                                    <span class="row-label">
+                                        @row.Key
+                                    </span>
+
+                                    <div class="seat-items">
+
+                                        @foreach (var seat in row)
+                                        {
+                                            var isReserved = reservedSeats.Contains(seat);
+
+                                            <MudButton @key="seat"
+                                                       Class="@GetSeatClass(seat)"
+                                                       Variant="Variant.Filled"
+                                                       Size="Size.Small"
+                                                       Disabled="@isReserved"
+                                                       OnClick="@(() => ToggleSeat(seat))">
+
+                                                @seat.Substring(1)
+
+                                            </MudButton>
+                                        }
+
+                                    </div>
+
+                                    <span class="row-label">
+                                        @row.Key
+                                    </span>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+
+                    @* SEAT LEGEND *@
+
+                    <div class="seat-legend">
+
+                        <div>
+                            <span class="legend-box selected"></span>
+                            Selected
+                        </div>
+
+                        <div>
+                            <span class="legend-box available"></span>
+                            Available
+                        </div>
+
+                        <div>
+                            <span class="legend-box reserved"></span>
+                            Booked
+                        </div>
+
+                    </div>
+
+                    <div class="seat-count">
+                        @selectedSeats.Count / @Tickets Seats Selected
+                    </div>
+
+                </div>
+
+            </div>
+
+        </MudForm>
+
+    </MudPaper>
+
 </div>
+
 
 
 
@@ -714,6 +1071,9 @@ public class BookingResponse
 
     [SupplyParameterFromQuery(Name = "movieName")]
     public string MovieName { get; set; } = string.Empty;
+
+    [SupplyParameterFromQuery(Name = "movieImage")]
+public string MovieImage { get; set; } = string.Empty;
 
     
     private readonly List<string> allSeats = Enumerable
@@ -865,6 +1225,15 @@ public class BookingResponse
         await LoadReservedSeats();
     }
 
+    
+private string GetTimeClass(string time)
+{
+    return Time == time
+        ? "time-btn time-active"
+        : "time-btn";
+}
+
+
     private async Task Payment()
     {
         if (form == null || isProcessing)
@@ -934,7 +1303,8 @@ public class BookingResponse
                     CultureInfo.InvariantCulture),
                 Tickets = Tickets,
                 RegisterId = RegisterId,
-                MovieName = MovieName.Trim()
+                MovieName = MovieName.Trim(),
+                // MovieImage = MovieImage.Trim()
             };
 
             using var response = await Http.PostAsJsonAsync(
@@ -998,6 +1368,610 @@ public class BookingResponse
 
 
 <style>
+
+    
+
+/* =====================================
+   MAIN BOOKING PAGE
+===================================== */
+
+.booking-page {
+    min-height: 100vh;
+    padding: 25px;
+    background: #050505;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.booking-dashboard {
+    width: 100%;
+    max-width: 1450px;
+    background: #101010 !important;
+    border: 1px solid #6f571b;
+    border-radius: 25px;
+    padding: 25px;
+    color: white;
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.08);
+}
+
+/* =====================================
+   HEADER
+===================================== */
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px 22px;
+    border-bottom: 1px solid #39301b;
+    margin-bottom: 25px;
+}
+
+.brand-title {
+    color: #D4AF37;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.header-subtitle {
+    color: #a99b78;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+/* =====================================
+   TWO COLUMN LAYOUT
+===================================== */
+
+.booking-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 30px;
+}
+
+.movie-booking-panel {
+    padding: 10px 20px 15px 5px;
+    border-right: 1px solid #39301b;
+}
+
+.seat-booking-panel {
+    padding: 10px 10px 15px;
+}
+
+/* =====================================
+   SECTION HEADINGS
+===================================== */
+
+.panel-heading {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.section-label {
+    color: #D4AF37;
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 18px 0 10px;
+}
+
+.booking-divider {
+    background-color: #39301b !important;
+    margin: 18px 0;
+}
+
+/* =====================================
+   MOVIE INFORMATION
+===================================== */
+
+.movie-information {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 25px;
+}
+
+.booking-movie-poster {
+    width: 165px;
+    height: 195px;
+    border-radius: 13px;
+    object-fit: cover;
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.18);
+    border: 1px solid #5c491e;
+}
+
+.poster-placeholder {
+    width: 165px;
+    height: 195px;
+    border-radius: 13px;
+    background: #1b1b1b;
+    color: #D4AF37;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #51421e;
+}
+
+.movie-information-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.booking-movie-title {
+    color: #D4AF37;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.movie-subtitle {
+    color: #b5b5b5;
+    font-size: 0.85rem;
+}
+
+.movie-rating {
+    color: #e4c15d;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* =====================================
+   INPUT FIELDS
+===================================== */
+
+.booking-input {
+    margin-bottom: 15px;
+}
+
+.booking-input .mud-input-control {
+    color: white;
+}
+
+.booking-input .mud-input-label {
+    color: #b5a477 !important;
+}
+
+.booking-input .mud-input-slot,
+.booking-input .mud-select-input {
+    color: white !important;
+}
+
+.booking-input .mud-input-outlined-border {
+    border-color: #6b5727 !important;
+}
+
+.booking-input .mud-input-outlined:hover .mud-input-outlined-border {
+    border-color: #D4AF37 !important;
+}
+
+.booking-input .mud-input-control:hover .mud-input-outlined-border {
+    border-color: #D4AF37 !important;
+}
+
+/* Input icons */
+
+.booking-input .mud-input-adornment {
+    color: #D4AF37 !important;
+}
+
+/* =====================================
+   TIME BUTTONS
+===================================== */
+
+.time-options {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.time-btn {
+    min-width: 0 !important;
+    padding: 10px 5px !important;
+    background: #1c1c1c !important;
+    color: #d0d0d0 !important;
+    border: 1px solid #49402b !important;
+    border-radius: 9px !important;
+    font-size: 0.78rem !important;
+    transition: all 0.3s ease;
+}
+
+.time-btn:hover {
+    background: #332b17 !important;
+    border-color: #D4AF37 !important;
+    color: #f1d477 !important;
+}
+
+.time-active {
+    background: #4b3b12 !important;
+    color: #ffdf80 !important;
+    border: 1px solid #D4AF37 !important;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+}
+
+/* =====================================
+   SELECTED SEATS
+===================================== */
+
+.selected-seats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 35px;
+}
+
+.selected-seat-chip {
+    background: #3d3214;
+    border: 1px solid #D4AF37;
+    border-radius: 6px;
+    padding: 7px 13px;
+    color: #f1d477;
+    font-size: 0.85rem;
+}
+
+.empty-seats {
+    color: #999999;
+    font-size: 0.85rem;
+}
+
+/* =====================================
+   BOOKING SUMMARY
+===================================== */
+
+.booking-summary {
+    margin-top: 20px;
+    padding: 15px;
+    background: #1b1b1b;
+    border-radius: 10px;
+    border: 1px solid #39301b;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 8px 0;
+    color: #b5b5b5;
+    font-size: 0.85rem;
+}
+
+.summary-row strong {
+    color: #D4AF37;
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+/* =====================================
+   PAYMENT BUTTON
+===================================== */
+
+.pay-btn {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #b8860b, #f1d477) !important;
+    color: #080808 !important;
+    border-radius: 30px !important;
+    padding: 12px !important;
+    font-weight: 800 !important;
+    transition: all 0.3s ease;
+}
+
+.pay-btn:hover {
+    background: linear-gradient(135deg, #f1d477, #D4AF37) !important;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+}
+
+.pay-btn:disabled {
+    background: #49412d !important;
+    color: #999 !important;
+}
+
+/* =====================================
+   CINEMA SCREEN
+===================================== */
+
+.screen-container {
+    width: 85%;
+    margin: 35px auto 45px;
+    text-align: center;
+}
+
+.screen-curve {
+    height: 35px;
+    border-top: 4px solid #D4AF37;
+    border-radius: 50% 50% 0 0;
+    box-shadow: 0 -8px 20px rgba(212, 175, 55, 0.18);
+}
+
+.screen-text {
+    color: #D4AF37;
+    letter-spacing: 7px;
+    font-size: 0.75rem;
+    margin-top: 8px;
+}
+
+/* =====================================
+   SEAT MAP
+===================================== */
+
+.seat-map {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.seat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.row-label {
+    width: 15px;
+    color: #D4AF37;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.seat-items {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 7px;
+    flex: 1;
+}
+
+/* =====================================
+   SEAT BUTTONS
+===================================== */
+
+.seat-button {
+    min-width: 0 !important;
+    height: 32px;
+    padding: 0 !important;
+    border-radius: 5px !important;
+    font-size: 0.7rem !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease;
+}
+
+/* AVAILABLE SEATS */
+
+.available-seat {
+    background: #4a3b15 !important;
+    color: #f5e4a8 !important;
+    border: 1px solid #8c7027 !important;
+}
+
+.available-seat:hover {
+    background: #80621c !important;
+    border-color: #D4AF37 !important;
+    transform: scale(1.08);
+}
+
+/* SELECTED SEATS */
+
+.selected-seat {
+    background: #D4AF37 !important;
+    color: #080808 !important;
+    border: 1px solid #ffe28a !important;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.35) !important;
+}
+
+/* BOOKED SEATS */
+
+.reserved-seat,
+.reserved-seat:disabled {
+    background: #292929 !important;
+    color: #686868 !important;
+    border: 1px solid #3c3c3c !important;
+    opacity: 1 !important;
+    cursor: not-allowed !important;
+}
+
+/* =====================================
+   SEAT LEGEND
+===================================== */
+
+.seat-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-top: 35px;
+    color: #bdbdbd;
+    font-size: 0.8rem;
+}
+
+.seat-legend div {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.legend-box {
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+}
+
+.legend-box.selected {
+    background: #D4AF37;
+}
+
+.legend-box.available {
+    background: #4a3b15;
+}
+
+.legend-box.reserved {
+    background: #292929;
+}
+
+.seat-count {
+    text-align: center;
+    color: #D4AF37;
+    margin-top: 20px;
+    font-size: 0.85rem;
+}
+
+/* =====================================
+   LOADING AND ERROR MESSAGE
+===================================== */
+
+.seat-message {
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    color: #c4b17c;
+    text-align: center;
+}
+
+.booking-dashboard .mud-alert {
+    background: #301c18;
+    color: #ffb7a8;
+    border: 1px solid #75412d;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN - TABLET
+===================================== */
+
+@@media (max-width: 950px) {
+
+    .booking-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .movie-booking-panel {
+        border-right: none;
+        border-bottom: 1px solid #39301b;
+        padding-bottom: 25px;
+    }
+
+    .seat-booking-panel {
+        padding-top: 20px;
+    }
+
+}
+
+/* =====================================
+   RESPONSIVE DESIGN - MOBILE
+===================================== */
+
+@@media (max-width: 600px) {
+
+    .booking-page {
+        padding: 8px;
+    }
+
+    .booking-dashboard {
+        padding: 15px 10px;
+        border-radius: 12px;
+    }
+
+    .booking-header {
+        flex-direction: column;
+        gap: 5px;
+        align-items: flex-start;
+    }
+
+    .movie-information {
+        gap: 12px;
+    }
+
+    .booking-movie-poster,
+    .poster-placeholder {
+        width: 115px;
+        height: 155px;
+    }
+
+    .booking-movie-title {
+        font-size: 1.15rem;
+    }
+
+    .time-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .seat-items {
+        gap: 4px;
+    }
+
+    .seat-row {
+        gap: 5px;
+    }
+
+    .seat-button {
+        height: 27px;
+        font-size: 0.6rem !important;
+    }
+
+    .seat-legend {
+        gap: 12px;
+    }
+
+    .screen-container {
+        width: 90%;
+    }
+
+}
+
+/* =====================================
+   RESPONSIVE DESIGN - SMALL MOBILE
+===================================== */
+
+@@media (max-width: 380px) {
+
+    .booking-dashboard {
+        padding: 12px 7px;
+    }
+
+    .booking-movie-poster,
+    .poster-placeholder {
+        width: 95px;
+        height: 135px;
+    }
+
+    .booking-movie-title {
+        font-size: 1rem;
+    }
+
+    .seat-items {
+        gap: 2px;
+    }
+
+    .seat-row {
+        gap: 3px;
+    }
+
+    .seat-button {
+        height: 24px;
+        font-size: 0.55rem !important;
+    }
+
+    .row-label {
+        width: 12px;
+        font-size: 0.7rem;
+    }
+
+}
+v
+
+
     .login-wrapper {
         display: flex;
         justify-content: center;

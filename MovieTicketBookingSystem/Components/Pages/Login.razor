@@ -142,6 +142,9 @@
     [SupplyParameterFromQuery(Name = "movieName")]
 public string MovieName { get; set; } = string.Empty;
 
+ [SupplyParameterFromQuery(Name = "movieImage")]
+public string MovieImage { get; set; } = string.Empty;
+
     public class LoginResponse
     {
         public string message { get; set; } = string.Empty;

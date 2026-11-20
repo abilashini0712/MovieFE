@@ -2,7 +2,7 @@
 @page "/"
 @implements IDisposable
 
-<MudContainer Class="page-wrapper" MaxWidth="MaxWidth.False">
+@* <MudContainer Class="page-wrapper" MaxWidth="MaxWidth.False">
 
     @if (CurrentMovie != null)
     {
@@ -38,7 +38,98 @@
         </MudStack>
     }
 
+</MudContainer> *@
+
+
+
+<MudContainer Class="cinematic-wrapper" MaxWidth="MaxWidth.False">
+
+    @if (CurrentMovie != null)
+    {
+        <div class="hero-banner">
+
+            @* Background and movie details *@
+            <div class="hero-slide" @key="CurrentMovie.Title">
+
+                <div class="hero-backdrop"
+                     style="@($"background-image: url('{CurrentMovie.Poster}')")">
+                </div>
+
+                <div class="hero-overlay"></div>
+
+                <div class="hero-content">
+
+                    <MudStack Spacing="2" Class="hero-details">
+
+                        <MudText Class="hero-label">
+                            NOW SHOWING
+                        </MudText>
+
+                        <MudText Class="hero-heading">
+                            @CurrentMovie.Title
+                        </MudText>
+
+                        <MudText Class="hero-meta">
+                            @CurrentMovie.Year
+                            <span> • </span>
+                            @CurrentMovie.Duration
+                        </MudText>
+
+                        <MudText Class="hero-description">
+                            @CurrentMovie.Description
+                        </MudText>
+
+                        <MudText Class="hero-cinema">
+                            <MudIcon Icon="@Icons.Material.Filled.LocationOn"
+                                     Size="Size.Small" />
+                            @CurrentMovie.Cinema
+                        </MudText>
+
+                       @*  <div class="hero-actions">
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Default"
+                                       Class="hero-book-btn"
+                                       StartIcon="@Icons.Material.Filled.PlayCircle"
+                                       Onclick="bookTicket">
+                                Book Tickets
+                            </MudButton>
+                        </div> *@
+
+                    </MudStack>
+
+                </div>
+
+            </div>
+
+            @* Previous button *@
+            <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft"
+                           Class="hero-arrow hero-prev"
+                           OnClick="PreviousMovie" />
+
+            @* Next button *@
+            <MudIconButton Icon="@Icons.Material.Filled.ChevronRight"
+                           Class="hero-arrow hero-next"
+                           OnClick="NextMovie" />
+
+            @* Carousel indicators *@
+            <div class="hero-indicators">
+
+                @for (int i = 0; i < Movies.Count; i++)
+                {
+                    int index = i;
+
+                    <button class="hero-dot @(CurrentIndex == index ? "active" : "")"
+                            @onclick="() => GoToMovie(index)">
+                    </button>
+                }
+
+            </div>
+
+        </div>
+    }
+
 </MudContainer>
+
 
 
 <MudContainer Class="now-showing-wrapper" MaxWidth="MaxWidth.False">
@@ -81,7 +172,7 @@
 
     /* HERO SECTION */
 
-    .page-wrapper {
+    /* .page-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -95,7 +186,281 @@
         padding: 60px;
         width: 100%;
         max-width: 1100px;
+    } */
+
+
+
+    
+/* CINEMATIC HERO SECTION */
+
+.cinematic-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    background-color: #080808;
+}
+
+.hero-banner {
+    position: relative;
+    width: 100%;
+    height: 560px;
+    min-height: 500px;
+    overflow: hidden;
+    background: #080808;
+}
+
+/* BACKGROUND IMAGE */
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    animation: heroFade 1s ease;
+}
+
+.hero-backdrop {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    animation: heroZoom 6s ease forwards;
+}
+
+/* DARK GRADIENT OVERLAY */
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(5, 5, 12, 0.98) 0%,
+        rgba(5, 5, 12, 0.85) 28%,
+        rgba(5, 5, 12, 0.45) 55%,
+        rgba(5, 5, 12, 0.08) 100%
+    );
+}
+
+/* MOVIE DETAILS */
+
+.hero-content {
+    position: absolute;
+    left: 5%;
+    bottom: 95px;
+    width: 480px;
+    max-width: 85%;
+    color: white;
+    z-index: 2;
+}
+
+.hero-details {
+    gap: 12px;
+}
+
+.hero-label {
+    color: goldenrod;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+.hero-heading {
+    color: white;
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.hero-meta {
+    color: #eeeeee;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.hero-description {
+    color: #dddddd;
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 450px;
+}
+
+.hero-cinema {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #d6d6d6;
+    font-size: 0.85rem;
+}
+
+/* BOOK BUTTON */
+
+.hero-actions {
+    margin-top: 12px;
+}
+
+.hero-book-btn {
+    background-color: white !important;
+    color: black !important;
+    border-radius: 30px !important;
+    padding: 10px 25px !important;
+    font-weight: bold !important;
+    transition: all 0.3s ease;
+}
+
+.hero-book-btn:hover {
+    background-color: goldenrod !important;
+    transform: scale(1.05);
+}
+
+/* LEFT AND RIGHT ARROWS */
+
+.hero-arrow {
+    position: absolute !important;
+    top: 48%;
+    z-index: 5;
+    color: white !important;
+    background-color: rgba(80, 80, 80, 0.55) !important;
+    width: 45px !important;
+    height: 55px !important;
+    transition: all 0.3s ease;
+}
+
+.hero-arrow:hover {
+    background-color: goldenrod !important;
+    color: black !important;
+}
+
+.hero-prev {
+    left: 15px;
+}
+
+.hero-next {
+    right: 15px;
+}
+
+/* BOTTOM INDICATORS */
+
+.hero-indicators {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+
+.hero-dot {
+    width: 22px;
+    height: 4px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.hero-dot.active {
+    width: 45px;
+    background-color: white;
+}
+
+/* TRANSITIONS */
+
+@@keyframes heroFade {
+    from {
+        opacity: 0;
     }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@@keyframes heroZoom {
+    from {
+        transform: scale(1.08);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+/* RESPONSIVE DESIGN */
+
+@@media (max-width: 900px) {
+
+    .hero-banner {
+        height: 500px;
+    }
+
+    .hero-content {
+        left: 5%;
+        width: 430px;
+    }
+
+    .hero-heading {
+        font-size: 2.1rem;
+    }
+
+}
+
+@@media (max-width: 600px) {
+
+    .hero-banner {
+        height: 530px;
+        min-height: 530px;
+    }
+
+    .hero-backdrop {
+        background-position: center;
+    }
+
+    .hero-overlay {
+        background: linear-gradient(
+            0deg,
+            rgba(5, 5, 12, 0.98) 0%,
+            rgba(5, 5, 12, 0.80) 50%,
+            rgba(5, 5, 12, 0.15) 100%
+        );
+    }
+
+    .hero-content {
+        left: 6%;
+        bottom: 75px;
+        width: 88%;
+        max-width: 88%;
+    }
+
+    .hero-heading {
+        font-size: 1.8rem;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .hero-arrow {
+        top: 40%;
+        width: 35px !important;
+        height: 45px !important;
+    }
+
+    .hero-prev {
+        left: 5px;
+    }
+
+    .hero-next {
+        right: 5px;
+    }
+
+}
+
+
+
 
     /* MOVIE POSTER ANIMATION */
 
@@ -275,6 +640,26 @@
 
     private System.Threading.Timer? movieTimer;
 
+    // protected override void OnInitialized()
+    // {
+    //     movieTimer = new System.Threading.Timer(
+    //         async _ =>
+    //         {
+    //             await InvokeAsync(() =>
+    //             {
+    //                 CurrentIndex = (CurrentIndex + 1) % Movies.Count;
+
+    //                 StateHasChanged();
+    //             });
+    //         },
+    //         null,
+    //         TimeSpan.FromSeconds(5),
+    //         TimeSpan.FromSeconds(5)
+    //     );
+    // }
+
+
+
     protected override void OnInitialized()
     {
         movieTimer = new System.Threading.Timer(
@@ -282,6 +667,9 @@
             {
                 await InvokeAsync(() =>
                 {
+                    if (Movies.Count == 0)
+                        return;
+
                     CurrentIndex = (CurrentIndex + 1) % Movies.Count;
 
                     StateHasChanged();
@@ -292,6 +680,34 @@
             TimeSpan.FromSeconds(5)
         );
     }
+
+    // Previous movie
+    private void PreviousMovie()
+    {
+        if (Movies.Count == 0)
+            return;
+
+        CurrentIndex = (CurrentIndex - 1 + Movies.Count) % Movies.Count;
+    }
+
+    // Next movie
+    private void NextMovie()
+    {
+        if (Movies.Count == 0)
+            return;
+
+        CurrentIndex = (CurrentIndex + 1) % Movies.Count;
+    }
+
+    // Select a particular movie using indicators
+    private void GoToMovie(int index)
+    {
+        if (index < 0 || index >= Movies.Count)
+            return;
+
+        CurrentIndex = index;
+    }
+
 
     public void Dispose()
     {
@@ -350,5 +766,10 @@
         public string Description { get; set; } = "";
         public string Cinema { get; set; } = "";
     }
+
+    // private void bookTicket()
+    // {
+    //     Navigation.NavigateTo("/register");
+    // }
 
 }

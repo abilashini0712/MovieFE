@@ -1,0 +1,68 @@
+﻿@page "/bind-event"
+
+<div class="bind-box">
+
+@* <h1>Bind Event Example</h1>
+
+<p>
+    <label>
+        InputValue: 
+        <input @bind="InputValue" @bind:event="oninput" />
+    </label>
+    
+</p>
+
+<p>
+    <code>InputValue</code>: @InputValue
+</p>
+
+</div>
+
+@code {
+    private string? InputValue { get; set; }
+} *@
+
+
+<h1>Bind Theory Example</h1>
+
+<p>
+    <label>
+        Normal Blazor binding: 
+        <input @bind="InputValue" />
+    </label>
+</p>
+
+<p>
+    <label>
+        Demonstration of equivalent HTML binding: 
+        <input value="@InputValue" @onchange="@((ChangeEventArgs __e) =>
+            InputValue = __e?.Value?.ToString())" />
+    </label>
+</p>
+
+<p>
+    <code>InputValue</code>: @InputValue
+</p>
+</div>
+
+@code {
+    private string? InputValue { get; set; }
+}
+
+<style>
+    .bind-box{
+          width: auto;
+    height: auto;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    h1{
+        color:white;
+    }
+     p{
+        color:white;
+    }
+</style>
